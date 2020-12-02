@@ -1,24 +1,372 @@
-<div id="app" class="d-flex flex-column h-100">
-  <app-nav-bar></app-nav-bar>
 
-  <button class="btn btn-primary btn-block" (click)="loginWithRedirect()">
-    Log in
-  </button>
+  <body>
+    <h1><img src="assets/images/western.png"/></h1>
+  
+  
+  
+    <nav>
+      <ul style="width:100%">
+              <li><a routerLink="">Home</a></li>
+              <li><a routerLink="/profile">Profile</a></li>
+      </ul>
+  </nav>
+  
+  <button class="btn btn-primary btn-block" (click)="loginWithRedirect()">Sign in</button>
+  <button>Sign out</button>
+  
+  
+  <!--Component loaded only on successful login-->
+  
+  
+  <router-outlet> </router-outlet>
+  
+  
+  <!--Component loaded only on successful login-->
+
+  <!--lab design and search stuff-->
+  
+  <div class = "belowImage">
+       <div class = "info">   
+         <h1>About:</h1>
+       <p> As Western University continues to respond to the changing circumstances surrounding the COVID-19 pandemic, the Fall/Winter 2020-2021 course offerings may be subject to change. As you plan your course selections, we encourage you to review the Academic Timetable regularly and follow updates on <a class= "removeunderline" href = "https://www.uwo.ca/coronavirus/students.html">  Western's COVID-19 website. </a> </p>
+  
+       <p>Please Note: Due to uncertainty around COVID-19, students must have a reliable internet connection and computer that are compatible with online learning and testing system requirements. Some courses may also require the use of a remote proctoring platform (such as Proctortrack) to ensure tests are taken fairly in accordance with Western's policy on Scholastic Discipline for Undergraduate Students and Scholastic Discipline for Graduate Students.</p>
+  
+       
+       Computer requirements include:
+      <div class = "bold"> Operating system : MAC:</div> OSX Yosemite 10.10.5 or higher, PC: Windows 7, 8, or higher
+        <div class = "bold">Processor/Ram: MAC:</div>:Intel / AMD Processor, 2 GB RAM, PC: Dual-core 2.4 Ghz CPU, 2 GB RAM or better
+       Web Browsers: Mozilla Firefox v20.0 or Higher Google Chrome v25.0 or higher
+        <div class = "bold">Plug-ins:</div> Javascript Enabled & Third Party Cookies Enabled
+        <div class = "bold">Camera resolution:</div> 800 x 600 resolution or better
+        <div class = "bold">Internet connection: </div>Cable Modem, DSL or better (300 kbps download, 250 kbps upload)
+    
+       <p>Please refer to the course syllabus and <a class= "removeunderline"href ="https://remoteproctoring.uwo.ca/"> Western's remote proctoring website for further information. </a> </p>
+       </div>
+  
+       <div class = "search">    
+  
+       <p> 
+       Search
+       </p>
+       </div>
+  
+   
+            <p class ="bold">Subjects:</p>
+  <select name="Subject" id="Subject">
+  <option value="All"> All</option>
+  <option value="ACTURSCI"> Actuarial Science </option>
+  <option value="AMERICAN"> American Studies </option>
+  <option value="ANATCELL"> Anatomy and Cell Biology </option>
+  <option value="ANTHRO"> Anthropology </option>
+  <option value="APPLMATH"> Applied Mathematics </option>
+  <option value="ARABIC"> Arabic </option>
+  <option value="AH"> Art History </option>
+  <option value="ARTHUM"> Arts and Humanities </option>
+  <option value="ASTRONOM"> Astronomy </option>
+  <option value="BIBLSTUD"> Biblical Studies </option>
+  <option value="BIOCHEM"> Biochemistry </option>
+  <option value="BIOLOGY"> Biology </option>
+  <option value="BME"> Biomedical Engineering </option>
+  <option value="BIOSTATS"> Biostatistics </option>
+  <option value="BUSINESS"> Business Administration </option>
+  <option value="CALCULUS"> Calculus </option>
+  <option value="CGS"> Centre for Global Studies </option>
+  <option value="CBE"> Chem &amp; Biochem Engineering </option>
+  <option value="CHEMBIO"> Chemical Biology </option>
+  <option value="CHEM"> Chemistry </option>
+  <option value="CSI"> Childhood &amp; Social Institutns </option>
+  <option value="CHINESE"> Chinese </option>
+  <option value="CHURCH"> Church History </option>
+  <option value="CHURLAW"> Church Law </option>
+  <option value="CHURMUSI"> Church Music</option>
+  <option value="CEE"> Civil &amp; Envrnmntl Engineering</option>
+  <option value="CLASSICS"> Classical Studies</option>
+  <option value="CMBPROG"> Combined Program Enrollment</option>
+  <option value="COMMSCI"> Communication Sci &amp; Disorders</option>
+  <option value="COMPLIT"> Comparative Lit &amp; Culture</option>
+  <option value="COMPSCI"> Computer Science</option>
+  <option value="CA"> Creative Arts</option>
+  <option value="DANCE"> Dance</option>
+  <option value="DIGICOMM"> Digital Communication</option>
+  <option value="DIGIHUM"> Digital Humanities</option>
+  <option value="DISABST"> Disability Studies</option>
+  <option value="EARTHSCI"> Earth Sciences</option>
+  <option value="ECONOMIC"> Economics</option>
+  <option value="EELC"> Education English Language Cen</option>
+  <option value="ECE"> Elect &amp; Computer Engineering</option>
+  <option value="ENGSCI"> Engineering Science</option>
+  <option value="ENGLISH"> English</option>
+  <option value="ENVIRSCI"> Environmental Science</option>
+  <option value="EPID"> Epidemiology</option>
+  <option value="EPIDEMIO"> Epidemiology &amp; Biostatistics</option>
+  <option value="FIMS"> FIMS</option>
+  <option value="FAMLYSTU"> Family Studies &amp; Human Develop</option>
+  <option value="FLDEDUC"> Field Education</option>
+  <option value="FILM"> Film Studies</option>
+  <option value="FINMOD"> Financial Modelling</option>
+  <option value="FOODNUTR"> Foods and Nutrition</option>
+  <option value="FRENCH"> French</option>
+  <option value="GEOGRAPH"> Geography</option>
+  <option value="GEOLOGY"> Geology</option>
+  <option value="GERMAN"> German</option>
+  <option value="GGB"> Global Great Books</option>
+  <option value="GLE"> Governance,Leadership &amp; Ethics</option>
+  <option value="GREEK"> Greek</option>
+  <option value="GPE"> Green Process Engineering</option>
+  <option value="HEALTSCI"> Health Sciences</option>
+  <option value="HEBREW"> Hebrew</option>
+  <option value="HISTTHEO"> Historical Theology</option>
+  <option value="HISTORY"> History</option>
+  <option value="HISTSCI"> History of Science</option>
+  <option value="HOMILET"> Homiletics</option>
+  <option value="HUMANECO"> Human Ecology</option>
+  <option value="HUMANRS"> Human Rights Studies</option>
+  <option value="INDIGSTU"> Indigenous Studies</option>
+  <option value="INTEGSCI"> Integrated Science</option>
+  <option value="ICC"> Intercultural Communications</option>
+  <option value="INTERDIS"> Interdisciplinary Studies</option>
+  <option value="INTREL"> International Relations</option>
+  <option value="ITALIAN"> Italian</option>
+  <option value="JAPANESE"> Japanese</option>
+  <option value="JEWISH"> Jewish Studies</option>
+  <option value="MTP-BRJR"> Journalism-Broadcasting Fanshw</option>
+  <option value="KINESIOL"> Kinesiology</option>
+  <option value="LATIN"> Latin</option>
+  <option value="LAW"> Law </option>
+  <option value="LS"> Leadership Studies</option>
+  <option value="LINGUIST"> Linguistics</option>
+  <option value="LITURST"> Liturgical Studies</option>
+  <option value="LITURGIC"> Liturgics</option>
+  <option value="MOS"> Management &amp; Organizational St</option>
+  <option value="MTP-MKTG"> Marketing - Fanshawe</option>
+  <option value="MATH"> Mathematics</option>
+  <option value="MME"> Mech &amp; Materials Engineering</option>
+  <option value="MSE"> Mechatronic Systems Engineering</option>
+  <option value="MIT"> Media, Information &amp;Technocult</option>
+  <option value="MEDBIO"> Medical Biophysics</option>
+  <option value="MEDHINFO"> Medical Health Informatics</option>
+  <option value="MEDSCIEN"> Medical Sciences</option>
+  <option value="MEDIEVAL"> Medieval Studies</option>
+  <option value="MICROIMM"> Microbiology &amp; Immunology</option>
+  <option value="MORALTHE"> Moral Theology</option>
+  <option value="MTP-MMED"> Multimed Dsgn &amp; Prod Fanshawe</option>
+  <option value="MCS"> Museum and Curatorial Studies</option>
+  <option value="MUSIC"> Music</option>
+  <option value="NEURO"> Neuroscience</option>
+  <option value="NURSING"> Nursing</option>
+  <option value="ONEHEALT"> One Health</option>
+  <option value="PASTTHEO"> Pastoral Theology</option>
+  <option value="PATHOL"> Pathology</option>
+  <option value="PERSIAN"> Persian</option>
+  <option value="PHARM"> Pharmacology</option>
+  <option value="PHILST"> Philosophical Studies</option>
+  <option value="PHILOSOP"> Philosophy</option>
+  <option value="PHYSICS"> Physics</option>
+  <option value="PHYSIOL"> Physiology</option>
+  <option value="PHYSPHRM"> Physiology and Pharmacology</option>
+  <option value="POLISCI"> Political Science</option>
+  <option value="PPE"> Politics, Philosophy, Economic</option>
+  <option value="PSYCHOL"> Psychology</option>
+  <option value="REHABSCI"> Rehabilitation Sciences</option>
+  <option value="RELEDUC"> Religious Education</option>
+  <option value="RELSTUD"> Religious Studies</option>
+  <option value="SACRTHEO"> Sacramental Theology</option>
+  <option value="SCHOLARS"> Scholars Electives</option>
+  <option value="SCIENCE"> Science</option>
+  <option value="SOCLJUST"> Social Justice &amp; Peace Studies</option>
+  <option value="SOCSCI"> Social Science</option>
+  <option value="SOCWORK"> Social Work</option>
+  <option value="SOCIOLOG"> Sociology</option>
+  <option value="SE"> Software Engineering</option>
+  <option value="SPANISH"> Spanish</option>
+  <option value="SPEECH"> Speech</option>
+  <option value="SPIRTHEO"> Spiritual Theology</option>
+  <option value="STATS"> Statistical Sciences</option>
+  <option value="SA"> Studio Art </option>
+  <option value="SYSTHEO"> Systematic Theology</option>
+  <option value="THANAT"> Thanatology</option>
+  <option value="THEATRE"> Theatre Studies</option>
+  <option value="THEOETH"> Theological Ethics</option>
+  <option value="THEOLST"> Theological Studies</option>
+  <option value="THESIS"> Thesis</option>
+  <option value="TJ"> Transitional Justice</option>
+  <option value="VISARTS"> Visual Arts</option>
+  <option value="WTC"> Western Thought &amp; Civilization</option>
+  <option value="WOMENST"> Women's Studies</option>
+  <option value="WORLDLIT"> World Literatures and Cultures</option>
+  <option value="WRITING"> Writing</option>
+  </select>
+  
+  
+       
+  
+       <div class = "CourseNumber">   
+       <p class ="bold">Course Number:</p>  
+       <input id ="numb" type="text" placeholder="eg. 1001">
+       </div>
+  
+        <div class = "Component">     
+            <p class ="bold">Component:</p> 
+       <select name="Component" id="Component">
+    <option value = "ALL">All</option>
+    <option value = "LEC">Lecture</option>
+    <option value = "TUT">Tutorial</option>
+    <option value = "LAB">Labotory</option>
+      </select>
+       </div>
+  
+  
+       <div class = "CourseNumber">   
+         <p class ="bold">Search by Keywords:</p>  
+         <input id ="keyWord" type="text" placeholder="eg. Math">
+         </div>
+  
+  
+  <!--Search Button-->
+  
+    
+  <!--Search Button-->
+  <button class = "submit" id ="submitname"  (click)= "ngOnInit()">Search for course</button>
+  
+  <!--Search Button-->
+  
+  
+  <div class = "schedulestuff">
+  <!--Create a Schedule-->
+       <p class ="bold">Create a Schedule:</p>
+       <input id ="scheduleName" type="text" [(ngModel)]='createdSchedule' placeholder="Schedule Name">   
+      
+         <button type="submit"  autofocus="" (click)="createSchedule()">Create Schedule</button> 
+       
+  <!--Create a Schedule-->
+  
+  
+  
+  
+  <!--Select and add to schedule -->
+   <p class ="bold"> Active Schedule:</p>
+   
+   <select id="scheduleDropdown" (change)="chooseSchedule()" [(ngModel)]="activeSch">
+     <option></option>
+     <option *ngFor="let obj of scheduleInfoObj| keyvalue" >{{obj.key}}</option>
+   </select>
+  
+   <br/>
+   <button type="submit"  autofocus="" (click)="addToSchedule()" >Add selected courses to selected schedule</button>
+  <!--Select and add to schedule -->
+  
+  
+   <!--Select schedule to display timetable for-->
+   <p class ="bold">Display TimeTable for This Schedule:</p>
+     <!--Display-->
+          <button type="submit" class="btn btn-info span2" autofocus="" (click)="generateWeeklySchedule()">Display</button>
+     <!--Display-->
+          
+   <!--Select schedule to display timetable for-->
+  
+  
+  
+  
+  
+  <!--Display search results-->
+        
+   <div>
+     <table class = "Searchresults" *ngFor = "let course of matchingcourses"> 
+       <tr> 
+         <th>Subject:</th>
+         <th>Course Number:</th>
+         <th>Class Name:</th>
+         <th>Class Section:</th>
+         <th>Component:</th>
+         <th>Select</th>
+         <th>Click to display remaining information</th>
+         
+  
+       </tr>
+       <tr> 
+         <td>{{course.subject}}</td>
+         <td>{{course.catalog_nbr}}</td>
+         <td>{{course.className}}</td>
+         <td>{{course.course_info[0].class_section}}</td>
+         <td>{{course.course_info[0].ssr_component}}</td>
+         <td>Add to schedule <input type="checkbox" [(ngModel)]='course.checked' (change)="courseSelected(course)"> </td>
+         <td><button class = "submit" id ="submitname"  (click)= "showFullCourseDetails()">Show remaining course details</button></td>
+       </tr>
+     </table>
+  
+     <table class = "Searchresults" *ngFor = "let course of displayfullcourses"> 
+       <tr> 
+         <th>Class Number</th>
+         <th>Start Time</th>
+         <th>End Time</th>
+         <th>Long description</th>
+         <th>Campus</th>
+         <th>Days</th>
+         <th>Enrollment Status</th>
+         <th>Descr</th>
+         <th>Catalog description</th>
+        
+       </tr>
+       <tr> 
+         <td>{{course.course_info[0].class_nbr}}</td>
+         <td>{{course.course_info[0].start_time}}</td>
+         <td>{{course.course_info[0].end_time}}</td>
+         <td>{{course.course_info[0].descrlong}}</td>
+         <td>{{course.course_info[0].campus}}</td>
+         <td>{{course.course_info[0].days}}</td>
+         <td>{{course.course_info[0].enrl_stat}}</td>
+         <td>{{course.course_info[0].descr}}</td>
+         <td>{{course.catalog_description}}</td>
+       
+       </tr>
+     </table>
+  
+     
+  
+  
+   </div>
+  <!--Display search results-->
+  
+  
+  
+        <!--Display timetable-->
+  
+  
+  
+  <div id="timeTableContainer" *ngIf="enableTimeTableVisibility" >
+   <h2>Time Table: {{ renderedSchedule }}</h2>
+   <br/>
+   <table>
+  
+   <tr>
+   <td></td>
+   <td *ngFor="let day of daysMapObject | keyvalue: fixKeyvalueOrder">
+   {{day.key}}
+   </td>
+   </tr>
+   
+   <tr timeTableTr *ngFor="let time of timeArray">
+   <td >{{ time }}</td> 
+   <td *ngFor="let day of daysMapObject | keyvalue: fixKeyvalueOrder">{{ timeBasedSchedule[time][day.key] }}</td>
+   </tr>
+   </table>
+   </div>
+        
+          <!--Display timetable-->
+  
+        
+        
+         </div> <!--Schedule stuff div-->
+  </div> <!--Below image div-->
+  
+  </body>
+  
   
 
-  <div>
+ 
+
+  
+<!--lab design and search stuff-->
 
 
-    
-  </div>
-
-  <div class="container flex-grow-1">
-    <div class="mt-5">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-
-
-
-  <app-footer></app-footer>
-</div>
