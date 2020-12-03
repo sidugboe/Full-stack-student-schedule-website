@@ -4,17 +4,23 @@
   
   
   
-    <nav>
+   <nav>
       <ul style="width:100%">
               <li><a routerLink="">Home</a></li>
               <li><a routerLink="/profile">Profile</a></li>
       </ul>
   </nav>
   
-  <button class="btn btn-primary btn-block" (click)="loginWithRedirect()">Sign in</button>
-  <button>Sign out</button>
+  <button class="btn btn-primary btn-block" (click)="loginWithRedirect()" *ngIf = "(auth.isAuthenticated$  | async) === false">Sign in</button>
+  <button (click) = "logout()" *ngIf = "auth.isAuthenticated$  | async">Sign out</button>
   
-  
+
+  <div *ngIf = "auth.isLoading$ | async; else loaded">
+    <app-loading></app-loading>
+  </div>
+ 
+  <ng-template #loaded>
+ 
   <!--Component loaded only on successful login-->
   
   
@@ -359,9 +365,14 @@
         
          </div> <!--Schedule stuff div-->
   </div> <!--Below image div-->
-  
+
+</ng-template>  
   </body>
   
+
+
+
+
   
 
  

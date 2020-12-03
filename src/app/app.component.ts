@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { courses } from './course';
-import { Location } from '@angular/common';
+import { DOCUMENT, Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { Auth0Client } from '@auth0/auth0-spa-js';
+
 
 @Injectable()
 export class ConfigService {
@@ -56,7 +56,8 @@ export class AppComponent {
 
 
 
-  constructor(public auth: AuthService, private _configservice:ConfigService) {}
+  constructor(public auth: AuthService, private _configservice:ConfigService,
+  @Inject(DOCUMENT) private doc: Document) {}
   
 
   //log in stuff
@@ -64,6 +65,15 @@ export class AppComponent {
   loginWithRedirect(): void {
     this.auth.loginWithRedirect();
   }
+
+
+   logout(): void {
+     this.auth.logout({returnTo: this.doc.location.origin});
+   }
+
+
+
+
   //log in stuff
 
 

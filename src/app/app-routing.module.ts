@@ -7,9 +7,9 @@ import { AuthenticatedComponent } from './authenticated/authenticated.component'
 import { AppComponent } from './app.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'authenticated', pathMatch: 'full'},
+  { path: '', redirectTo: '', pathMatch: 'full'},
 
-  { path: 'authenticated', component: AuthenticatedComponent },
+  { path: 'home', component: AppComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'external-api',component: ExternalApiComponent,},
 ];
