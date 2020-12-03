@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -13,14 +13,15 @@ import { HomeContentComponent } from './components/home-content/home-content.com
 import { HomeComponent } from './pages/home/home.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ExternalApiComponent } from './pages/external-api/external-api.component';
-import { AuthenticatedComponent } from './authenticated/authenticated.component';
-import { UnauthenticatedComponent } from './unauthenticated/unauthenticated.component';
+
+import { AuthModule } from '@auth0/auth0-angular';
+import { environment as env } from '../environments/environment';
+import { LoginButtonComponent } from './components/login-button/login-button.component';
+import { LogoutButtonComponent } from './components/logout-button/logout-button.component';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
 import { ConfigService } from './app.component';
 
-
-import { AuthModule } from '@auth0/auth0-angular';
-import { environment as env } from '../environments/environment'
 
 
 
@@ -37,21 +38,21 @@ import { environment as env } from '../environments/environment'
     HomeComponent,
     ProfileComponent,
     ExternalApiComponent,
-    AuthenticatedComponent,
-    UnauthenticatedComponent,
+    LoginButtonComponent,
+    LogoutButtonComponent,
+  ],
+  providers: [
+    ConfigService,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule,
     FormsModule,
+    HttpClientModule,
     FontAwesomeModule,
     AuthModule.forRoot({
       ...env.auth,
     }),
-  ],
-  providers: [
-    ConfigService,
   ],
   bootstrap: [AppComponent],
 })

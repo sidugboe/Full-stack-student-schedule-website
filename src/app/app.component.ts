@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';

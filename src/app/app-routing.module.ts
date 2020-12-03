@@ -1,19 +1,23 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from 'src/app/pages/home/home.component';
+// import { ProfileComponent } from 'src/app/pages/profile/profile.component';
 import { ExternalApiComponent } from 'src/app/pages/external-api/external-api.component';
-import { ProfileComponent } from './profile/profile.component';
-import { AuthenticatedComponent } from './authenticated/authenticated.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 import { AppComponent } from './app.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '', pathMatch: 'full'},
 
-  { path: 'home', component: AppComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: 'external-api',component: ExternalApiComponent,},
+  {
+    path: 'profile',
+    component: ProfileComponent,
+  },
+  {
+    path: 'external-api',
+    component: ExternalApiComponent,
+  },
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

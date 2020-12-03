@@ -15,11 +15,7 @@
   <button (click) = "logout()" *ngIf = "auth.isAuthenticated$  | async">Sign out</button>
   
 
-  <div *ngIf = "auth.isLoading$ | async; else loaded">
-    <app-loading></app-loading>
-  </div>
- 
-  <ng-template #loaded>
+
  
   <!--Component loaded only on successful login-->
   
@@ -366,7 +362,7 @@
          </div> <!--Schedule stuff div-->
   </div> <!--Below image div-->
 
-</ng-template>  
+ 
   </body>
   
 
