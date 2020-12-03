@@ -3033,7 +3033,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/stephen/Desktop/auth0-angular-workshop-step-05-profile/src/polyfills.ts */"./src/polyfills.ts");
+module.exports = __webpack_require__(/*! /Users/stephen/Desktop/se3316-sidugboe-lab5/src/polyfills.ts */"./src/polyfills.ts");
 
 
 /***/ })

@@ -1,6 +1,6 @@
 {
   "domain": "dev-b3--aq40.us.auth0.com",
   "clientId": "kZQmBccE2VcSa9ydXplm6W2PILlEaYGJ",
-  "audience": "http://your-audience-identifier",
+  "audience": "https://lab5-stephen",
   "apiUrl": "http://localhost:7000"
 }
