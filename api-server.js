@@ -45,6 +45,38 @@ app.get("/api/messages/protected-message", checkJwt, (req, res) => {
   res.send({
     message: "The API successfully validated your access token.",
   });
+});  
+
+
+
+
+
+app.post("/api/user/update-data", checkJwt, (req, res)=> {
+  // user specific data to be sent to user specific collection
+
+  let username = req.body.user;
+    let userData = {
+      schedules: null //req.body.scheduleData,
+      //...
+    }
+  // * might need to stringify data 
+      // todo
+
+  // write data to USER SPECIFIC collection (will create if one not existing)
+    return mongoClient.connect()
+    .then(() => {                  //replace this with username
+        mongoClient.db("db-name").collection("user").insertOne(userData);
+        return res.status(201).send(body); // token here maybe?
+    })
+    .catch(err => {
+        console.log("Error storing user\n",err);
+        return res.status(500).send("Failed to store user info.");
+    });
 });
 
+
+
+
+
 app.listen(port, () => console.log(`API Server listening on port ${port}`));
+

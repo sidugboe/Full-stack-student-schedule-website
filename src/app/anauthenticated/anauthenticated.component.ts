@@ -6,16 +6,27 @@ import { Observable } from 'rxjs';
 import { courses } from '../course';
 import { DOCUMENT, Location } from '@angular/common';
 import { Router } from '@angular/router';
-
+import { schedules } from '../schedule'
 
 @Injectable()
 export class ConfigService {
 
   private linkstring: string = "http://localhost:3000/api/subjectss";
+  private privateScheduleURL: string = "http://localhost:3000/api/user/update-data";
+  private publicScheduleURL: string = "http://localhost:3000/api/subjectss";
+
+
 
   constructor(private http: HttpClient) { }
-   
-  
+
+  postPrivateScheduleData(body): Observable <schedules[]> {
+    return this.http.post<schedules[]>(this.privateScheduleURL, body);
+  }
+
+  postPublicScheduleData(body): Observable <schedules[]> {
+    return this.http.post<schedules[]>(this.publicScheduleURL, body);
+  }
+
    getcourses(): Observable<courses[]> {
      return this.http.get<courses[]>(this.linkstring);
    }
@@ -290,4 +301,9 @@ for(var timeSlot of Object.keys(formattedTimeTableData)){
 
 fixKeyvalueOrder(first, second){
   return first;}
+
+
+
+
+
 }

@@ -8,6 +8,7 @@ import { courses } from 'src/app/course';
 import { ConfigService } from 'src/app/anauthenticated/anauthenticated.component';
 import { usersint } from 'src/app/user';
 
+
 @Injectable()
 
 
@@ -288,6 +289,38 @@ for(var timeSlot of Object.keys(formattedTimeTableData)){
 fixKeyvalueOrder(first, second){
   return first;
 }
+
+
+updateObject() {
+
+
+  let privateScheduleData = {};
+  let publicScheduleData = {};
+
+  for(let i = 0; i<Object.keys(this.scheduleInfoObj).length; i++) {
+    if(this.scheduleInfoObj[i].visibility == "private") {
+      console.log("appended to private")
+      privateScheduleData[Object.keys(this.scheduleInfoObj)[i]] = this.scheduleInfoObj[i];
+
+    }
+    else if(this.scheduleInfoObj[i].visibility == "public") {
+      console.log("appended to public")
+      publicScheduleData[Object.keys(this.scheduleInfoObj)[i]] = this.scheduleInfoObj[i];
+    }
+    else {
+      console.log("visibility is not set")
+    }
+  }
+
+  this._configservice.postPublicScheduleData(publicScheduleData).subscribe(response => console.log("response"));
+
+
+
+
+}
+
+
+
 
 
 
