@@ -315,6 +315,9 @@ updateObject() {
   this._configservice.postPublicScheduleData(publicScheduleData).subscribe(response => console.log("response"));
 
 
+  privateScheduleData["creator"] = this.auth.user$;
+  this._configservice.postPrivateScheduleData(privateScheduleData).subscribe(response => console.log("response"));
+
 
 
 }
