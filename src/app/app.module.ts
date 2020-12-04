@@ -9,7 +9,8 @@ import { AuthModule, AuthHttpInterceptor} from '@auth0/auth0-angular';
 import { environment as env } from '../environments/environment';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
-import { ConfigService } from './app.component';
+import { ConfigService } from './anauthenticated/anauthenticated.component';
+import { AnauthenticatedComponent } from './anauthenticated/anauthenticated.component';
 
 
 
@@ -20,6 +21,7 @@ import { ConfigService } from './app.component';
     AppComponent,
     ProfileComponent,
     ExternalApiComponent,
+    AnauthenticatedComponent,
   ],
   providers: [
     ConfigService,

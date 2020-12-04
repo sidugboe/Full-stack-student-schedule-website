@@ -1,170 +1,142 @@
-import { Component, OnInit, Inject } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
-import { DOCUMENT, Location } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { courses } from 'src/app/course';
-import { ConfigService } from 'src/app/anauthenticated/anauthenticated.component';
-import { usersint } from 'src/app/user';
+import { courses } from '../course';
+import { DOCUMENT, Location } from '@angular/common';
+import { Router } from '@angular/router';
+
 
 @Injectable()
+export class ConfigService {
+
+  private linkstring: string = "http://localhost:3000/api/subjectss";
+
+  constructor(private http: HttpClient) { }
+   
+  
+   getcourses(): Observable<courses[]> {
+     return this.http.get<courses[]>(this.linkstring);
+   }
+   
+}
 
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
+  selector: 'app-anauthenticated',
+  templateUrl: './anauthenticated.component.html',
+  styles: [
+  ]
 })
+export class AnauthenticatedComponent implements OnInit {
 
 
-export class ProfileComponent implements OnInit {
-  public profileJson = {};
-  user;
+
   activeSch;
-  test;
 
   renderedSchedule;
+  
   enableTimeTableVisibility = false;
+
   public courses = [];
   public matchingcourses = [];
+
   public displayfullcourses = [];
+
   selectedCourses = [];
+
   createdSchedule: string;
   scheduleInfoObj = {};
+
+
   activeSchedule = []; 
   actvieScheduleName: string;
+
   timeBasedSchedule = {}
 
 
-  constructor(public auth: AuthService, private _configservice:ConfigService, @Inject(DOCUMENT) private doc: Document) {}
 
-  createSchedule(){
-    let name: string = this.createdSchedule;
-    if(!this.createdSchedule){
-      console.log("Error: Please input something in the Schedule Name box");
-    }
-    else{
-      console.log("schedule " + name + " created");
-      this.scheduleInfoObj[name] = {};
-      console.log(this.scheduleInfoObj);
-
-    }
-    
-  }
-
-  chooseSchedule(){
-
-    let name = this.activeSch;
-    this.activeSchedule = this.scheduleInfoObj[name];
-    this.actvieScheduleName = name;
-  
-  }
-  
-  
-  addToSchedule(){
-    if(this.actvieScheduleName == null || this.actvieScheduleName == "" || this.actvieScheduleName == undefined){
-      alert("Please select a schedule to add courses to it.")
-      return;
-    }
-    let activeSchedule = this.activeSchedule;
-    let name = this.actvieScheduleName;
-  
-    this.scheduleInfoObj[name] = this.selectedCourses;
-    console.log(this.scheduleInfoObj);
-  }
+  constructor(public auth: AuthService, private _configservice:ConfigService,
+  @Inject(DOCUMENT) private doc: Document) {}
   
 
 
-  ngOnInit(): void {
-    this.auth.user$.subscribe(
-      (profile) => (this.profileJson = JSON.stringify(profile, null, 2))
-    );
+ ngOnInit() {
+  this.displayfullcourses = [];
+  this.matchingcourses = [];
 
+  this._configservice.getcourses().subscribe(data => this.courses = data);
 
-   
-
-    
-
-
-
-
-
-
-
-    this.displayfullcourses = [];
-    this.matchingcourses = [];
   
-    this._configservice.getcourses().subscribe(data => this.courses = data);
+let subjectInput = (document.getElementById("Subject") as HTMLInputElement).value;
+let courseID = (document.getElementById("numb") as HTMLInputElement).value;
+let component = (document.getElementById("Component") as HTMLInputElement).value;
+let keyWord = (document.getElementById("keyWord") as HTMLInputElement).value;
+
+console.log(subjectInput)
+
+//Search with keyword if subject input = all
+if(subjectInput=="All")  {
+  if(keyWord.length<4) {
+    console.log("Please input a keyword with at least 4 characters") 
+  } 
+  else {
+    for(var string of this.courses)  {
+//let lowercasecat = string.catalog_nbr.toLowerCase();
+let lowercaseclass = string.className.toLowerCase();
+//let catwithoutwhitespaces = lowercasecat.replace(/\s/g, '');
+let classNamewithoutspaces = lowercaseclass.replace(/\s/g, '');
+let lowercasekeyWord = keyWord.toLowerCase();
+
+      if(classNamewithoutspaces.includes(lowercasekeyWord)) {
+        this.matchingcourses.push(string)
   
-    
-  let subjectInput = (document.getElementById("Subject") as HTMLInputElement).value;
-  let courseID = (document.getElementById("numb") as HTMLInputElement).value;
-  let component = (document.getElementById("Component") as HTMLInputElement).value;
-  let keyWord = (document.getElementById("keyWord") as HTMLInputElement).value;
-  
-  console.log(subjectInput)
-  
-  //Search with keyword if subject input = all
-  if(subjectInput=="All")  {
-    if(keyWord.length<4) {
-      console.log("Please input a keyword with at least 4 characters") 
-    } 
-    else {
-      for(var string of this.courses)  {
-  //let lowercasecat = string.catalog_nbr.toLowerCase();
-  let lowercaseclass = string.className.toLowerCase();
-  //let catwithoutwhitespaces = lowercasecat.replace(/\s/g, '');
-  let classNamewithoutspaces = lowercaseclass.replace(/\s/g, '');
-  let lowercasekeyWord = keyWord.toLowerCase();
-  
-        if(classNamewithoutspaces.includes(lowercasekeyWord)) {
-          this.matchingcourses.push(string)
-    
-        }
-    
       }
-    }
-   
-    if(this.matchingcourses.length==0) {
-  console.log("Please input a specific subject or a valid keywoord")  
-    }
   
-  
-  }
-  
-  if(!courseID)  {
-    console.log("Please input a specific course id")
-  }
-  
-  
-  
-  for(var c of this.courses) {
-  
-    if(component=="ALL") {
-  
-    if (subjectInput === c.subject && courseID == c.catalog_nbr) {
-      this.matchingcourses.push(c)
-    }
-  
-  }
-  
-  else {
-    if (subjectInput === c.subject && courseID == c.catalog_nbr && component=== c.course_info[0].ssr_component) {
-      this.matchingcourses.push(c)
     }
   }
-    
-  }
-  
-  if (this.matchingcourses.length==0) {
-    alert("Please input a valid subject and course id combination")
-  }
-  else {
-    console.log(this.matchingcourses)
-  }
-  
+ 
+  if(this.matchingcourses.length==0) {
+console.log("Please input a specific subject or a valid keywoord")  
   }
 
+
+}
+
+if(!courseID)  {
+  console.log("Please input a specific course id")
+}
+
+
+
+for(var c of this.courses) {
+
+  if(component=="ALL") {
+
+  if (subjectInput === c.subject && courseID == c.catalog_nbr) {
+    this.matchingcourses.push(c)
+  }
+
+}
+
+else {
+  if (subjectInput === c.subject && courseID == c.catalog_nbr && component=== c.course_info[0].ssr_component) {
+    this.matchingcourses.push(c)
+  }
+}
+  
+}
+
+if (this.matchingcourses.length==0) {
+  alert("Please input a valid subject and course id combination")
+}
+else {
+  console.log(this.matchingcourses)
+}
+
+
+}
 
   //search for course stuff
 
@@ -185,7 +157,18 @@ showFullCourseDetails() {
   
 }
 
-
+createSchedule(){
+  let name: string = this.createdSchedule;
+  if(!this.createdSchedule){
+    console.log("Error: Please input something in the Schedule Name box");
+  }
+  else{
+    console.log("schedule " + name + " created");
+    this.scheduleInfoObj[name] = {};
+    console.log(this.scheduleInfoObj);
+  }
+  
+}
 
 
 courseSelected(course: object){ 
@@ -217,6 +200,26 @@ courseSelected(course: object){
 
 //added code
 
+chooseSchedule(){
+
+  let name = this.activeSch;
+  this.activeSchedule = this.scheduleInfoObj[name];
+  this.actvieScheduleName = name;
+
+}
+
+
+addToSchedule(){
+  if(this.actvieScheduleName == null || this.actvieScheduleName == "" || this.actvieScheduleName == undefined){
+    alert("Please select a schedule to add courses to it.")
+    return;
+  }
+  let activeSchedule = this.activeSchedule;
+  let name = this.actvieScheduleName;
+
+  this.scheduleInfoObj[name] = this.selectedCourses;
+  console.log(this.scheduleInfoObj);
+}
 
 
 
@@ -286,9 +289,5 @@ for(var timeSlot of Object.keys(formattedTimeTableData)){
 
 
 fixKeyvalueOrder(first, second){
-  return first;
-}
-
-
-
+  return first;}
 }

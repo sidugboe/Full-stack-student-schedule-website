@@ -5,10 +5,16 @@ import { ExternalApiComponent } from 'src/app/pages/external-api/external-api.co
 import { ProfileComponent } from './pages/profile/profile.component';
 import { AppComponent } from './app.component';
 import { AuthGuard } from '@auth0/auth0-angular';
+import { AnauthenticatedComponent } from './anauthenticated/anauthenticated.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '', pathMatch: 'full'},
 
+  {
+    path: 'anauthenticated',
+    component: AnauthenticatedComponent,
+    canActivate: [AuthGuard],
+  },
   {
     path: 'profile',
     component: ProfileComponent,

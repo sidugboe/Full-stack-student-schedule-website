@@ -1,56 +1,3 @@
-<!--This is where im going to put my user schedule shit-->
-
-<div *ngIf= "auth.user$ | async as user">
-  <p>Here is your profile</p>
-
-  <div class="col-md-2 mb-3">
-    <img
-      [src]="user.picture"
-      alt="User's profile picture"
-      class="rounded-circle img-fluid profile-picture"
-    />
-  </div>
-
-  //get schedules
-  <p>{{user.nickname}}</p>
-
-  
-
-
-
-<!--Create a Schedule-->
-<p class ="bold">Create a Schedule:</p>
-<input id ="scheduleName" type="text" [(ngModel)]='createdSchedule' placeholder="Schedule Name">   
-
-  <button type="submit"  autofocus="" (click)="createSchedule()">Create Schedule</button> 
-
-<!--Create a Schedule-->
-
-
-
-
-<!--Select and add to schedule -->
-<p class ="bold"> Active Schedule:</p>
-
-<select id="scheduleDropdown" (change)="chooseSchedule()" [(ngModel)]="activeSch">
-<option></option>
-<option *ngFor="let obj of scheduleInfoObj| keyvalue" >{{obj.key}}</option>
-</select>
-
-<br/>
-<button type="submit"  autofocus="" (click)="addToSchedule()" >Add selected courses to selected schedule</button>
-<!--Select and add to schedule -->
-
-
-<!--Select schedule to display timetable for-->
-<p class ="bold">Display TimeTable for This Schedule:</p>
-<!--Display-->
-   <button type="submit" class="btn btn-info span2" autofocus="" (click)="generateWeeklySchedule()">Display</button>
-<!--Display-->
-   
-<!--Select schedule to display timetable for-->
-
-</div>
 
   <!--lab design and search stuff-->
   
@@ -246,6 +193,39 @@
 
 
 <div class = "schedulestuff">
+<!--Create a Schedule-->
+    <p class ="bold">Create a Schedule:</p>
+    <input id ="scheduleName" type="text" [(ngModel)]='createdSchedule' placeholder="Schedule Name">   
+   
+      <button type="submit"  autofocus="" (click)="createSchedule()">Create Schedule</button> 
+    
+<!--Create a Schedule-->
+
+
+
+
+<!--Select and add to schedule -->
+<p class ="bold"> Active Schedule:</p>
+
+<select id="scheduleDropdown" (change)="chooseSchedule()" [(ngModel)]="activeSch">
+  <option></option>
+  <option *ngFor="let obj of scheduleInfoObj| keyvalue" >{{obj.key}}</option>
+</select>
+
+<br/>
+<button type="submit"  autofocus="" (click)="addToSchedule()" >Add selected courses to selected schedule</button>
+<!--Select and add to schedule -->
+
+
+<!--Select schedule to display timetable for-->
+<p class ="bold">Display TimeTable for This Schedule:</p>
+  <!--Display-->
+       <button type="submit" class="btn btn-info span2" autofocus="" (click)="generateWeeklySchedule()">Display</button>
+  <!--Display-->
+       
+<!--Select schedule to display timetable for-->
+
+
 
 
 
@@ -344,8 +324,3 @@
 
 
 <!--lab design and search stuff-->
-
-
-
-<!--This is where im going to put my user schedule shit-->
-
