@@ -11,6 +11,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
 import { ConfigService } from './anauthenticated/anauthenticated.component';
 import { AnauthenticatedComponent } from './anauthenticated/anauthenticated.component';
+import { AcceptableComponent } from './acceptable/acceptable.component';
+import { TakedownComponent } from './takedown/takedown.component';
+import { PrivacyComponent } from './privacy/privacy.component';
 
 
 
@@ -22,6 +25,9 @@ import { AnauthenticatedComponent } from './anauthenticated/anauthenticated.comp
     ProfileComponent,
     ExternalApiComponent,
     AnauthenticatedComponent,
+    AcceptableComponent,
+    TakedownComponent,
+    PrivacyComponent,
   ],
   providers: [
     ConfigService,

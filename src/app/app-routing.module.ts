@@ -6,6 +6,12 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { AppComponent } from './app.component';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { AnauthenticatedComponent } from './anauthenticated/anauthenticated.component';
+import { AcceptableComponent } from './acceptable/acceptable.component';
+import { TakedownComponent } from './takedown/takedown.component';
+import { PrivacyComponent } from './privacy/privacy.component'
+
+
+
 
 const routes: Routes = [
   { path: '', redirectTo: '', pathMatch: 'full'},
@@ -13,7 +19,6 @@ const routes: Routes = [
   {
     path: 'anauthenticated',
     component: AnauthenticatedComponent,
-    canActivate: [AuthGuard],
   },
   {
     path: 'profile',
@@ -24,6 +29,18 @@ const routes: Routes = [
     path: 'external-api',
     component: ExternalApiComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'acceptablepolicy',
+    component: AcceptableComponent,
+  },
+  {
+    path: 'takedownpolicy',
+    component: TakedownComponent,
+  },
+  {
+    path: 'privacy',
+    component: PrivacyComponent,
   },
 ];
 
