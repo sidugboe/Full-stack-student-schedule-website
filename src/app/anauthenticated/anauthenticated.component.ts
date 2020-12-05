@@ -7,14 +7,15 @@ import { courses } from '../course';
 import { DOCUMENT, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { schedules } from '../schedule'
+import { scheduleResponse } from '../scheduleresponses';
 
 @Injectable()
 export class ConfigService {
 
   private linkstring: string = "http://localhost:7000/api/subjectss";
-  private privateScheduleURL: string = "http://localhost:7000/api/private/update-data";
+  private privateScheduleURL: string = "http://localhost:7000/api/user/update-data";
   private publicScheduleURL: string = "http://localhost:7000/api/public/update-data";
-
+  private geturl: string = "http://localhost:7000/api/public/scheduleData";
 
 
   constructor(private http: HttpClient) { }
@@ -31,6 +32,15 @@ export class ConfigService {
    getcourses(): Observable<courses[]> {
      return this.http.get<courses[]>(this.linkstring);
    }
+
+   getPublicScheduleData(): Observable<scheduleResponse[]> {  // observable type any?
+    return this.http.get<scheduleResponse[]>(this.geturl);
+  };
+
+  getPrivateScheduleData(username): Observable<scheduleResponse[]> {  // observable type any?
+    let GETPrivateScheduleDataString: string = "http://localhost:7000/api/" + username + "/scheduleData";
+    return this.http.get<scheduleResponse[]>(GETPrivateScheduleDataString);
+  };
    
 }
 
@@ -208,6 +218,7 @@ courseSelected(course: object){
     }
   }
 }
+
 
 
 //added code

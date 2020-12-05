@@ -1,6 +1,5 @@
+  
 require("dotenv").config();
-
-const client = require('mongodb').MongoClient();
 
 const express = require("express");
 const cors = require("cors");
@@ -9,23 +8,28 @@ const helmet = require("helmet");
 const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
 
+const bodyParser = require('body-parser');
+
+const asser = require("assert");
+const { assert } = require("console");
+const MongoClient = require('mongodb').MongoClient;
+const mongo = require("mongodb"); 
+
 const app = express();
+
+app.use(express.json());  // for parsing application/json objects passed in POST bodies
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json())
+
 
 const port = 7000 || process.env.API_PORT;
 const appOrigin = process.env.APP_ORIGIN;
 const audience = process.env.AUTH0_AUDIENCE;
 const issuer = process.env.AUTH0_ISSUER;
-const timetable = require("./timetabledata.json") ;
 
 
-
-
-
-const url 
-
-const router = express.Router()
-
-
+const uri = "mongodb+srv://dbUser:456R7xzk@cluster0.mxdnt.mongodb.net/?retryWrites=true&w=majority";
+const mongoClient = new MongoClient(uri,{ useNewUrlParser: true, useUnifiedTopology: true });
 
 
 if (!issuer || !audience) {
@@ -36,12 +40,21 @@ app.use(morgan("dev"));
 app.use(helmet());
 app.use(cors({ origin: appOrigin }));
 
+
+
 const checkJwt = jwt({
   secret: jwksRsa.expressJwtSecret({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
     jwksUri: `${issuer}.well-known/jwks.json`,
+    handleSigningKeyError: (err, cb) => {
+      if (err instanceof jwksRsa.SigningKeyNotFoundError) {
+        return cb(new Error('This is bad'));
+      }
+      return cb(err);
+    }
+    
   }),
 
   audience: audience,
@@ -49,35 +62,51 @@ const checkJwt = jwt({
   algorithms: ["RS256"],
 });
 
-app.get("/api/messages/public-message", (req, res) => {
-  res.send({
-    message: "The API doesn't require an access token to share this message.",
-  });
+
+
+app.post("/api/user/update-data"/*, checkJwt*/, (req, res)=> {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:7000');
+
+
+    let username = req.body.user; 
+
+    console.log(typeof username);
+
+    console.log(username);
+
+    let privateScheduleData = req.body;
+  
+ 
+    delete privateScheduleData.user
+
+    return mongoClient.connect()
+    .then(() => { 
+        mongoClient.db("db-name").collection(username).insertOne(privateScheduleData);
+        return res.status(201).send(privateScheduleData); // token here maybe?
+    })
+    .catch(err => {
+        console.log("Error storing user\n",err);
+        return res.status(500).send("Failed to store user info.");
+    });
 });
 
-app.get("/api/messages/protected-message", checkJwt, (req, res) => {
-  res.send({
-    message: "The API successfully validated your access token.",
-  });
-});  
+app.post("/api/public/update-data"/*, checkJwt*/, (req, res)=> {
 
+  
+  let username = req.body.user; 
 
+    let publicScheduleData = req.body;
+  
+  
+    delete publicScheduleData.user
+    console.log(req.body);
 
+ 
 
-
-app.post("/api/private/update-data", checkJwt, (req, res)=> {
-
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:7000')
-  // user specific data to be sent to user specific collection
-    let userData = req.body;
-  // * might need to stringify data 
-      // todo
-
-  // write data to USER SPECIFIC collection (will create if one not existing)
     return mongoClient.connect()
-    .then(() => {                  //replace this with username
-        mongoClient.db("db-name").collection("user").insertOne(userData);
-        return res.status(201).send(body); // token here maybe?
+    .then(() => { 
+        mongoClient.db("db-name").collection("publicschedules").insertOne(publicScheduleData);
+        return res.status(201).send(publicScheduleData); // token here maybe?
     })
     .catch(err => {
         console.log("Error storing user\n",err);
@@ -86,13 +115,92 @@ app.post("/api/private/update-data", checkJwt, (req, res)=> {
 });
 
 
+app.get("/api/public/scheduleData", (req, res) => {
+
+  return mongoClient.connect()
+    .then( () => {
+      const scheduleCollection = mongoClient.db("db-name").collection("public-schedules").find();
+
+      return new Promise((resolve, reject) => {
+        scheduleData = {};
+
+        scheduleCollection.forEach( e => {
+          console.log(e);
+          scheduleData["scheduleDataInfo"] = e.scheduleDataInfo;
+          scheduleData["scheduleData"] = e.scheduleData;
+        }, 
+        () => {   // callback executed after forEach
+          scheduleCollection.close();
+          
+          if(scheduleData){
+            console.log(scheduleData);
+            resolve(scheduleData);  
+          }
+          else{
+            reject("could not get data");
+          }
+        });
+      })
+      }).then( (scheduleData) => {
+        return res.status(201).send(scheduleData);
+      }).catch((error) => {
+        console.log(error);
+        return res.status(400).send();
+      })
+    .catch(error => {
+      console.log("could not connect to db");
+    });
+});
+
+app.get("/api/:username/scheduleData", (req, res) => {
+
+  let username = req.params.username;
+
+  return mongoClient.connect()
+    .then( () => {
+      const scheduleCollection = mongoClient.db("db-name").collection(username).find();
+
+      return new Promise((resolve, reject) => {
+        scheduleData = {};
+
+        scheduleCollection.forEach( e => {
+          scheduleData["scheduleDataInfo"] = e.scheduleDataInfo;
+          scheduleData["scheduleData"] = e.scheduleData;
+        }, 
+        () => {   // callback executed after forEach
+          scheduleCollection.close();
+          
+          if(scheduleData){
+            console.log(scheduleData);
+            resolve(scheduleData);  
+          }
+          else{
+            reject("could not get data");
+          }
+        });
+      })
+      }).then( (scheduleData) => {
+        return res.status(201).send(scheduleData);
+      }).catch((error) => {
+        console.log(error);
+        return res.status(400).send();
+      })
+    .catch(error => {
+      console.log("could not connect to db");
+    });
+});
 
 //backend for lab4
+const timetable = require("./timetabledata.json") ;
+
+
 app.get('/api/subjectss', (req, res) => { 
+
 
 res.send(timetable)
 
 })
+
 
 
 

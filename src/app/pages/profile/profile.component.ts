@@ -36,14 +36,16 @@ export class ProfileComponent implements OnInit {
   actvieScheduleName: string;
   timeBasedSchedule = {}
   newScheduleEnabled = false;""
-
+  profile = null;
+  scheduleDataInfo = {};
+  scheduleData: any = {};
 
   constructor(public auth: AuthService, private _configservice:ConfigService, @Inject(DOCUMENT) private doc: Document) {
     
   }
 
   createSchedule(){
-    let user = JSON.parse(this.profileJson).name
+    let user = this.profile.nickname;
     let description: string = (document.getElementById("scheduleDescription") as HTMLInputElement).value;
     let visiblity: string = (document.getElementById("visibilityDropDown") as HTMLInputElement).value;
     let name: string = this.createdSchedule;
@@ -86,30 +88,48 @@ export class ProfileComponent implements OnInit {
       alert("Please select a schedule to add courses to it.")
       return;
     }
+    if(!this.profile){
+      alert("you must sign in to access this functionality");
+      return;
+    }
+
+    // if(!this.scheduleInfoObj[this.actvieScheduleName].creator != this.profile.name){
+    //   alert("you cannot edit a schedule that you did not create");
+    //   return;
+    // }
+
+
     let activeSchedule = this.activeSchedule;
     let name = this.actvieScheduleName;
+    let numberOfCourses = this.selectedCourses.length;
   
     this.scheduleInfoObj[name] = this.selectedCourses;
     console.log(this.scheduleInfoObj);
+
+    this.scheduleData[name] = this.selectedCourses;
+
+    // set new modified date and length for schedule info
+    // TODO get modified date format 
+      this.scheduleInfoObj[name].length = numberOfCourses;
+      this.scheduleInfoObj[name].modified = new Date();
+    
+    console.log(this.scheduleData);
+    this.updateObject()
   }
   
 
 
   ngOnInit(): void {
+   
     this.auth.user$.subscribe(
-      (profile) => (this.profileJson = JSON.stringify(profile, null, 2))
-    );
+      (profile) => { 
+        let profileJson = JSON.stringify(profile, null, 2);
+        this.profile = JSON.parse(profileJson);
+        console.log(this.profile);
+    });
 
 
    
-
-    
-
-
-
-
-
-
 
     this.displayfullcourses = [];
     this.matchingcourses = [];
@@ -312,6 +332,7 @@ fixKeyvalueOrder(first, second){
 
 updateObject() {
 
+  let user = this.profile.name;
 
   let privateScheduleData = {
      scheduleData: {},
@@ -323,25 +344,33 @@ updateObject() {
        scheduleDataInfo: {}
   };
 
+  
   for(let i = 0; i<Object.keys(this.scheduleInfoObj).length; i++) {
-    if(this.scheduleInfoObj[i].visibility == "private") {
-      console.log("appended to private")
-      privateScheduleData[Object.keys(this.scheduleInfoObj)[i]] = this.scheduleInfoObj[i];
+   
+
+
+    if(this.scheduleInfoObj[Object.keys(this.scheduleInfoObj)[i]].visibility == "private") {
+     
+      privateScheduleData["scheduleData"][Object.keys(this.scheduleInfoObj)[i]] = this.scheduleData[Object.keys(this.scheduleInfoObj)[i]];
+      privateScheduleData["scheduleDataInfo"][Object.keys(this.scheduleInfoObj)[i]] = this.scheduleDataInfo[Object.keys(this.scheduleInfoObj)[i]];
 
     }
-    else if(this.scheduleInfoObj[i].visibility == "public") {
-      console.log("appended to public")
-      publicScheduleData[Object.keys(this.scheduleInfoObj)[i]] = this.scheduleInfoObj[i];
+    else if(this.scheduleInfoObj[Object.keys(this.scheduleInfoObj)[i]].visibility == "public") {
+     
+      publicScheduleData["scheduleData"][Object.keys(this.scheduleInfoObj)[i]] = this.scheduleData[Object.keys(this.scheduleInfoObj)[i]];
+      publicScheduleData["scheduleDataInfo"][Object.keys(this.scheduleInfoObj)[i]] = this.scheduleDataInfo[Object.keys(this.scheduleInfoObj)[i]];
+          
     }
     else {
       console.log("visibility is not set")
     }
   }
 
+
+  publicScheduleData["user"] = user;
+  privateScheduleData["user"] = user;
+
   this._configservice.postPublicScheduleData(publicScheduleData).subscribe(response => console.log("response"));
-
-
-  
   this._configservice.postPrivateScheduleData(privateScheduleData).subscribe(response => console.log("response"));
 
 
