@@ -11,9 +11,9 @@ import { schedules } from '../schedule'
 @Injectable()
 export class ConfigService {
 
-  private linkstring: string = "http://localhost:3000/api/subjectss";
-  private privateScheduleURL: string = "http://localhost:3000/api/user/update-data";
-  private publicScheduleURL: string = "http://localhost:3000/api/subjectss";
+  private linkstring: string = "http://localhost:7000/api/subjectss";
+  private privateScheduleURL: string = "http://localhost:7000/api/private/update-data";
+  private publicScheduleURL: string = "http://localhost:7000/api/public/update-data";
 
 
 

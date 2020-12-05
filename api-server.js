@@ -15,6 +15,11 @@ const port = 7000 || process.env.API_PORT;
 const appOrigin = process.env.APP_ORIGIN;
 const audience = process.env.AUTH0_AUDIENCE;
 const issuer = process.env.AUTH0_ISSUER;
+const timetable = require("./timetabledata.json") ;
+
+
+
+
 
 const url 
 
@@ -60,7 +65,7 @@ app.get("/api/messages/protected-message", checkJwt, (req, res) => {
 
 
 
-app.post("/api/user/update-data", checkJwt, (req, res)=> {
+app.post("/api/private/update-data", checkJwt, (req, res)=> {
 
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:7000')
   // user specific data to be sent to user specific collection
@@ -80,6 +85,14 @@ app.post("/api/user/update-data", checkJwt, (req, res)=> {
     });
 });
 
+
+
+//backend for lab4
+app.get('/api/subjectss', (req, res) => { 
+
+res.send(timetable)
+
+})
 
 
 
