@@ -14,6 +14,13 @@ const appOrigin = process.env.APP_ORIGIN;
 const audience = process.env.AUTH0_AUDIENCE;
 const issuer = process.env.AUTH0_ISSUER;
 
+const url 
+const client = require('mongodb').MongoClient();
+const router = express.Router()
+
+
+
+
 if (!issuer || !audience) {
   throw new Error("Please make sure that .env is in place and populated");
 }
