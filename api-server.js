@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+const client = require('mongodb').MongoClient();
+
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
@@ -15,7 +17,7 @@ const audience = process.env.AUTH0_AUDIENCE;
 const issuer = process.env.AUTH0_ISSUER;
 
 const url 
-const client = require('mongodb').MongoClient();
+
 const router = express.Router()
 
 
@@ -59,20 +61,17 @@ app.get("/api/messages/protected-message", checkJwt, (req, res) => {
 
 
 app.post("/api/user/update-data", checkJwt, (req, res)=> {
-  // user specific data to be sent to user specific collection
 
-  let username = req.body.user;
-    let userData = {
-      schedules: null //req.body.scheduleData,
-      //...
-    }
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:7000')
+  // user specific data to be sent to user specific collection
+    let userData = req.body;
   // * might need to stringify data 
       // todo
 
   // write data to USER SPECIFIC collection (will create if one not existing)
     return mongoClient.connect()
     .then(() => {                  //replace this with username
-        mongoClient.db("db-name").collection("user").insertOne(userData);
+        mongoClient.db("db-name").collection(username).insertOne(userData);
         return res.status(201).send(body); // token here maybe?
     })
     .catch(err => {
