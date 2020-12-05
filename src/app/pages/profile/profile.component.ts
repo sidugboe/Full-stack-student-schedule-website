@@ -19,7 +19,7 @@ import { usersint } from 'src/app/user';
 
 
 export class ProfileComponent implements OnInit {
-  public profileJson = {};
+  public profileJson = "";
   user;
   activeSch;
   test;
@@ -35,12 +35,19 @@ export class ProfileComponent implements OnInit {
   activeSchedule = []; 
   actvieScheduleName: string;
   timeBasedSchedule = {}
+  newScheduleEnabled = false;""
 
 
-  constructor(public auth: AuthService, private _configservice:ConfigService, @Inject(DOCUMENT) private doc: Document) {}
+  constructor(public auth: AuthService, private _configservice:ConfigService, @Inject(DOCUMENT) private doc: Document) {
+    
+  }
 
   createSchedule(){
+    let user = JSON.parse(this.profileJson).name
+    let description: string = (document.getElementById("scheduleDescription") as HTMLInputElement).value;
+    let visiblity: string = (document.getElementById("visibilityDropDown") as HTMLInputElement).value;
     let name: string = this.createdSchedule;
+
     if(!this.createdSchedule){
       console.log("Error: Please input something in the Schedule Name box");
     }
@@ -48,9 +55,21 @@ export class ProfileComponent implements OnInit {
       console.log("schedule " + name + " created");
       this.scheduleInfoObj[name] = {};
       console.log(this.scheduleInfoObj);
-
+      this.scheduleInfoObj[name] = {creator: user, modified: "", length: undefined, description: description, expanded: false, visibility: visiblity};
     }
+    this.createdSchedule = "";
+    this.newScheduleEnabled =  false; // hide the create schedule options again
+    this.updateObject()
     
+    
+  }
+
+  toggleNewScheduleFields(){
+    if(this.newScheduleEnabled){
+      this.newScheduleEnabled =  false;
+    }else{
+      this.newScheduleEnabled = true;
+    }
   }
 
   chooseSchedule(){
@@ -294,8 +313,15 @@ fixKeyvalueOrder(first, second){
 updateObject() {
 
 
-  let privateScheduleData = {};
-  let publicScheduleData = {};
+  let privateScheduleData = {
+     scheduleData: {},
+     scheduleDataInfo: {}
+
+  };
+  let publicScheduleData = {
+       scheduleData: {},
+       scheduleDataInfo: {}
+  };
 
   for(let i = 0; i<Object.keys(this.scheduleInfoObj).length; i++) {
     if(this.scheduleInfoObj[i].visibility == "private") {
@@ -315,7 +341,7 @@ updateObject() {
   this._configservice.postPublicScheduleData(publicScheduleData).subscribe(response => console.log("response"));
 
 
-  privateScheduleData["creator"] = this.auth.user$;
+  
   this._configservice.postPrivateScheduleData(privateScheduleData).subscribe(response => console.log("response"));
 
 
