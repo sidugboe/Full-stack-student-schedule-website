@@ -19,12 +19,13 @@ export class ConfigService {
 
   constructor(private http: HttpClient) { }
 
-  postPrivateScheduleData(body): Observable <schedules[]> {
-    return this.http.post<schedules[]>(this.privateScheduleURL, body);
+  postPrivateScheduleData(content): Observable <schedules[]> {
+
+    return this.http.post<schedules[]>(this.privateScheduleURL, content);
   }
 
-  postPublicScheduleData(body): Observable <schedules[]> {
-    return this.http.post<schedules[]>(this.publicScheduleURL, body);
+  postPublicScheduleData(content): Observable <schedules[]> {
+    return this.http.post<schedules[]>(this.publicScheduleURL, content);
   }
 
    getcourses(): Observable<courses[]> {
