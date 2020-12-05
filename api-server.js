@@ -71,7 +71,7 @@ app.post("/api/user/update-data", checkJwt, (req, res)=> {
   // write data to USER SPECIFIC collection (will create if one not existing)
     return mongoClient.connect()
     .then(() => {                  //replace this with username
-        mongoClient.db("db-name").collection(username).insertOne(userData);
+        mongoClient.db("db-name").collection("user").insertOne(userData);
         return res.status(201).send(body); // token here maybe?
     })
     .catch(err => {
