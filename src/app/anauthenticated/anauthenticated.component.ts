@@ -34,12 +34,12 @@ export class ConfigService {
    }
 
    getPublicScheduleData(): Observable<scheduleResponse[]> {  // observable type any?
-    return this.http.get<scheduleResponse[]>(this.geturl);
+    return this.http.get<any[]>(this.geturl);
   };
 
   getPrivateScheduleData(username): Observable<scheduleResponse[]> {  // observable type any?
     let GETPrivateScheduleDataString: string = "http://localhost:7000/api/" + username + "/scheduleData";
-    return this.http.get<scheduleResponse[]>(GETPrivateScheduleDataString);
+    return this.http.get<any[]>(GETPrivateScheduleDataString);
   };
    
 }
@@ -53,7 +53,7 @@ export class ConfigService {
 })
 export class AnauthenticatedComponent implements OnInit {
 
-
+  publicscheduleResponse = {};
 
   activeSch;
 
@@ -84,7 +84,125 @@ export class AnauthenticatedComponent implements OnInit {
   
 
 
- ngOnInit() {
+
+
+
+courseSelected(course: object){ 
+
+  let checked = course["checked"];
+
+  if(checked){
+    
+      this.selectedCourses.push(course);
+      console.log(this.selectedCourses);
+  }
+  else{
+    for(let schedule in this.selectedCourses){
+      if(this.selectedCourses[schedule] == course){
+        
+       
+          const index = this.selectedCourses.indexOf(this.selectedCourses[schedule], 0);
+          if (index > -1) {
+            this.selectedCourses.splice(index, 1);
+          }
+      
+        console.log("course removed from selected courses");
+        console.log(this.selectedCourses);
+      }
+    }
+  }
+}
+
+
+
+//added code
+
+chooseSchedule(){
+
+
+  this._configservice.getPublicScheduleData().subscribe(data => this.publicscheduleResponse = data);
+  
+  let name = this.activeSch;
+  this.activeSchedule = this.publicscheduleResponse[name];
+  this.actvieScheduleName = name;
+
+
+}
+
+
+
+timeArray = ["8:30 AM","9:30 AM","10:30 AM","11:30 AM","12:30 PM","1:30 PM","2:30 PM","3:30 PM","4:30 PM","5:30 PM","6:30 PM","7:30 PM","8:30 PM","9:30 PM"]; // used to be times; change in HTML
+daysMapObject = {Monday: "M", Tuesday: "Tu", Wednesday: "W", Thursday: "Th", Friday: "F"}; // used to be "days" - change in HTML
+
+generateWeeklySchedule(){
+  console.log("inside func");
+
+  if(this.activeSchedule.length == 0){
+    console.log("schedule empty");
+  }
+  this.renderedSchedule = this.actvieScheduleName;
+
+    let formattedTimeTableData = {};
+    console.log(formattedTimeTableData);
+
+    for(let time of this.timeArray){
+        formattedTimeTableData[time] = {};
+    }
+    console.log(formattedTimeTableData);
+
+
+  // add active schedule data to object to be rendered
+
+  for(var courseObject of this.activeSchedule){
+
+    let courseDays = courseObject.course_info[0].days; 
+    let courseName = courseObject.className;
+    let courseTime = courseObject.course_info[0].start_time;
+    let courseInfo = courseObject.catalog_nbr + " " + courseName + " " + courseObject.course_info[0].ssr_component; 
+
+    // add course data to object to be rendered
+    for(let day in this.daysMapObject){
+      if(courseDays.includes(this.daysMapObject[day])) {  
+        // check for conflics
+        if(formattedTimeTableData[courseTime][day] == undefined ||formattedTimeTableData[courseTime][courseDays] == "" ) {
+          formattedTimeTableData[courseTime][day] = courseInfo;
+        }
+        else{
+          formattedTimeTableData[courseTime][day] += "course conflict: " + courseObject.catalog_nbr;
+        }
+      }else{
+       
+        formattedTimeTableData[courseTime][day] = "";
+      }        
+    }
+  }
+
+
+  // populate rest of table with empty string
+for(var timeSlot of Object.keys(formattedTimeTableData)){
+
+    if(Object.keys(formattedTimeTableData[timeSlot]).length === 0){
+    
+        for(var daySlot in this.daysMapObject){
+            formattedTimeTableData[timeSlot][daySlot] = "";
+        }
+    }
+};
+
+  this.timeBasedSchedule = formattedTimeTableData;  // to fix error set line 51 to:   timeBasedSchedule = {}; 
+  this.enableTimeTableVisibility = true;
+  console.log(this.timeBasedSchedule);
+  return;
+}
+
+
+fixKeyvalueOrder(first, second){
+  return first;
+
+}
+
+
+ngOnInit() {
   this.displayfullcourses = [];
   this.matchingcourses = [];
 
@@ -179,140 +297,6 @@ showFullCourseDetails() {
   
 }
 
-createSchedule(){
-  let name: string = this.createdSchedule;
-  if(!this.createdSchedule){
-    console.log("Error: Please input something in the Schedule Name box");
-  }
-  else{
-    console.log("schedule " + name + " created");
-    this.scheduleInfoObj[name] = {};
-    console.log(this.scheduleInfoObj);
-  }
-  
-}
-
-
-courseSelected(course: object){ 
-
-  let checked = course["checked"];
-
-  if(checked){
-    
-      this.selectedCourses.push(course);
-      console.log(this.selectedCourses);
-  }
-  else{
-    for(let schedule in this.selectedCourses){
-      if(this.selectedCourses[schedule] == course){
-        
-       
-          const index = this.selectedCourses.indexOf(this.selectedCourses[schedule], 0);
-          if (index > -1) {
-            this.selectedCourses.splice(index, 1);
-          }
-      
-        console.log("course removed from selected courses");
-        console.log(this.selectedCourses);
-      }
-    }
-  }
-}
-
-
-
-//added code
-
-chooseSchedule(){
-
-  let name = this.activeSch;
-  this.activeSchedule = this.scheduleInfoObj[name];
-  this.actvieScheduleName = name;
-
-}
-
-
-addToSchedule(){
-  if(this.actvieScheduleName == null || this.actvieScheduleName == "" || this.actvieScheduleName == undefined){
-    alert("Please select a schedule to add courses to it.")
-    return;
-  }
-  let activeSchedule = this.activeSchedule;
-  let name = this.actvieScheduleName;
-
-  this.scheduleInfoObj[name] = this.selectedCourses;
-  console.log(this.scheduleInfoObj);
-}
-
-
-
-timeArray = ["8:30 AM","9:30 AM","10:30 AM","11:30 AM","12:30 PM","1:30 PM","2:30 PM","3:30 PM","4:30 PM","5:30 PM","6:30 PM","7:30 PM","8:30 PM","9:30 PM"]; // used to be times; change in HTML
-daysMapObject = {Monday: "M", Tuesday: "Tu", Wednesday: "W", Thursday: "Th", Friday: "F"}; // used to be "days" - change in HTML
-
-generateWeeklySchedule(){
-  console.log("inside func");
-
-  if(this.activeSchedule.length == 0){
-    console.log("schedule empty");
-  }
-  this.renderedSchedule = this.actvieScheduleName;
-
-    let formattedTimeTableData = {};
-    console.log(formattedTimeTableData);
-
-    for(let time of this.timeArray){
-        formattedTimeTableData[time] = {};
-    }
-    console.log(formattedTimeTableData);
-
-
-  // add active schedule data to object to be rendered
-
-  for(var courseObject of this.activeSchedule){
-
-    let courseDays = courseObject.course_info[0].days; 
-    let courseName = courseObject.className;
-    let courseTime = courseObject.course_info[0].start_time;
-    let courseInfo = courseObject.catalog_nbr + " " + courseName + " " + courseObject.course_info[0].ssr_component; 
-
-    // add course data to object to be rendered
-    for(let day in this.daysMapObject){
-      if(courseDays.includes(this.daysMapObject[day])) {  
-        // check for conflics
-        if(formattedTimeTableData[courseTime][day] == undefined ||formattedTimeTableData[courseTime][courseDays] == "" ) {
-          formattedTimeTableData[courseTime][day] = courseInfo;
-        }
-        else{
-          formattedTimeTableData[courseTime][day] += "course conflict: " + courseObject.catalog_nbr;
-        }
-      }else{
-       
-        formattedTimeTableData[courseTime][day] = "";
-      }        
-    }
-  }
-
-
-  // populate rest of table with empty string
-for(var timeSlot of Object.keys(formattedTimeTableData)){
-
-    if(Object.keys(formattedTimeTableData[timeSlot]).length === 0){
-    
-        for(var daySlot in this.daysMapObject){
-            formattedTimeTableData[timeSlot][daySlot] = "";
-        }
-    }
-};
-
-  this.timeBasedSchedule = formattedTimeTableData;  // to fix error set line 51 to:   timeBasedSchedule = {}; 
-  this.enableTimeTableVisibility = true;
-  console.log(this.timeBasedSchedule);
-  return;
-}
-
-
-fixKeyvalueOrder(first, second){
-  return first;}
 
 
 

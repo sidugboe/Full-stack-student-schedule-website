@@ -46,7 +46,7 @@
 
 <select id="scheduleDropdown" (change)="chooseSchedule()" [(ngModel)]="activeSch">
 <option></option>
-<option *ngFor="let obj of scheduleInfoObj| keyvalue" >{{obj.key}}</option>
+<option *ngFor="let obj of scheduleData| keyvalue" >{{obj.key}}</option>
 </select>
 
 <br/>

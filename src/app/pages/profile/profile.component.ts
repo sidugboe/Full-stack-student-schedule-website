@@ -45,19 +45,20 @@ export class ProfileComponent implements OnInit {
   }
 
   createSchedule(){
-    let user = this.profile.nickname;
+    let user = this.profile.name;
     let description: string = (document.getElementById("scheduleDescription") as HTMLInputElement).value;
     let visiblity: string = (document.getElementById("visibilityDropDown") as HTMLInputElement).value;
     let name: string = this.createdSchedule;
+    let currentTime = new Date();
 
     if(!this.createdSchedule){
       console.log("Error: Please input something in the Schedule Name box");
     }
     else{
       console.log("schedule " + name + " created");
-      this.scheduleInfoObj[name] = {};
-      console.log(this.scheduleInfoObj);
-      this.scheduleInfoObj[name] = {creator: user, modified: "", length: undefined, description: description, expanded: false, visibility: visiblity};
+      this.scheduleData[name] = {};
+      console.log(this.scheduleData);
+      this.scheduleDataInfo[name] = {creator: user, modified: "", length: 0, description: description, expanded: false, visibility: visiblity};
     }
     this.createdSchedule = "";
     this.newScheduleEnabled =  false; // hide the create schedule options again
@@ -77,7 +78,7 @@ export class ProfileComponent implements OnInit {
   chooseSchedule(){
 
     let name = this.activeSch;
-    this.activeSchedule = this.scheduleInfoObj[name];
+    this.activeSchedule = this.scheduleData[name];
     this.actvieScheduleName = name;
   
   }
@@ -103,15 +104,15 @@ export class ProfileComponent implements OnInit {
     let name = this.actvieScheduleName;
     let numberOfCourses = this.selectedCourses.length;
   
-    this.scheduleInfoObj[name] = this.selectedCourses;
     console.log(this.scheduleInfoObj);
 
     this.scheduleData[name] = this.selectedCourses;
 
     // set new modified date and length for schedule info
     // TODO get modified date format 
-      this.scheduleInfoObj[name].length = numberOfCourses;
-      this.scheduleInfoObj[name].modified = new Date();
+    console.log(this.scheduleDataInfo)
+      this.scheduleDataInfo[name].length = numberOfCourses;
+      this.scheduleDataInfo[name].modified = new Date();
     
     console.log(this.scheduleData);
     this.updateObject()
@@ -345,20 +346,20 @@ updateObject() {
   };
 
   
-  for(let i = 0; i<Object.keys(this.scheduleInfoObj).length; i++) {
+  for(let i = 0; i<Object.keys(this.scheduleDataInfo).length; i++) {
    
 
 
-    if(this.scheduleInfoObj[Object.keys(this.scheduleInfoObj)[i]].visibility == "private") {
+    if(this.scheduleDataInfo[Object.keys(this.scheduleDataInfo)[i]].visibility == "private") {
      
-      privateScheduleData["scheduleData"][Object.keys(this.scheduleInfoObj)[i]] = this.scheduleData[Object.keys(this.scheduleInfoObj)[i]];
-      privateScheduleData["scheduleDataInfo"][Object.keys(this.scheduleInfoObj)[i]] = this.scheduleDataInfo[Object.keys(this.scheduleInfoObj)[i]];
+      privateScheduleData["scheduleData"][Object.keys(this.scheduleDataInfo)[i]] = this.scheduleData[Object.keys(this.scheduleDataInfo)[i]];
+      privateScheduleData["scheduleDataInfo"][Object.keys(this.scheduleDataInfo)[i]] = this.scheduleDataInfo[Object.keys(this.scheduleDataInfo)[i]];
 
     }
-    else if(this.scheduleInfoObj[Object.keys(this.scheduleInfoObj)[i]].visibility == "public") {
+    else if(this.scheduleDataInfo[Object.keys(this.scheduleDataInfo)[i]].visibility == "public") {
      
-      publicScheduleData["scheduleData"][Object.keys(this.scheduleInfoObj)[i]] = this.scheduleData[Object.keys(this.scheduleInfoObj)[i]];
-      publicScheduleData["scheduleDataInfo"][Object.keys(this.scheduleInfoObj)[i]] = this.scheduleDataInfo[Object.keys(this.scheduleInfoObj)[i]];
+      publicScheduleData["scheduleData"][Object.keys(this.scheduleDataInfo)[i]] = this.scheduleData[Object.keys(this.scheduleDataInfo)[i]];
+      publicScheduleData["scheduleDataInfo"][Object.keys(this.scheduleDataInfo)[i]] = this.scheduleDataInfo[Object.keys(this.scheduleDataInfo)[i]];
           
     }
     else {
@@ -370,8 +371,12 @@ updateObject() {
   publicScheduleData["user"] = user;
   privateScheduleData["user"] = user;
 
-  this._configservice.postPublicScheduleData(publicScheduleData).subscribe(response => console.log("response"));
-  this._configservice.postPrivateScheduleData(privateScheduleData).subscribe(response => console.log("response"));
+  let visiblity: string = (document.getElementById("visibilityDropDown") as HTMLInputElement).value;
+
+   if(visiblity=="public") {
+  this._configservice.postPublicScheduleData(publicScheduleData).subscribe(); }
+   else if(visiblity=="public") {
+  this._configservice.postPrivateScheduleData(privateScheduleData).subscribe();}
 
 
 

@@ -119,7 +119,7 @@ app.get("/api/public/scheduleData", (req, res) => {
 
   return mongoClient.connect()
     .then( () => {
-      const scheduleCollection = mongoClient.db("db-name").collection("public-schedules").find();
+      const scheduleCollection = mongoClient.db("db-name").collection("publicschedules").find();
 
       return new Promise((resolve, reject) => {
         scheduleData = {};
