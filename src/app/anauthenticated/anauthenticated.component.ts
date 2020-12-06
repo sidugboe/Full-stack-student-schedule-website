@@ -76,6 +76,8 @@ export class AnauthenticatedComponent implements OnInit {
   actvieScheduleName: string;
 
   timeBasedSchedule = {}
+  scheduleDataInfo = {};
+  scheduleData: any = {};
 
 
 
@@ -123,7 +125,7 @@ chooseSchedule(){
   this._configservice.getPublicScheduleData().subscribe(data => this.publicscheduleResponse = data);
   
   let name = this.activeSch;
-  this.activeSchedule = this.publicscheduleResponse[name];
+  this.activeSchedule = this.scheduleData[name];
   this.actvieScheduleName = name;
 
 
@@ -133,6 +135,8 @@ chooseSchedule(){
 
 timeArray = ["8:30 AM","9:30 AM","10:30 AM","11:30 AM","12:30 PM","1:30 PM","2:30 PM","3:30 PM","4:30 PM","5:30 PM","6:30 PM","7:30 PM","8:30 PM","9:30 PM"]; // used to be times; change in HTML
 daysMapObject = {Monday: "M", Tuesday: "Tu", Wednesday: "W", Thursday: "Th", Friday: "F"}; // used to be "days" - change in HTML
+
+
 
 generateWeeklySchedule(){
   console.log("inside func");
@@ -202,7 +206,72 @@ fixKeyvalueOrder(first, second){
 }
 
 
+showFullCourseDetails() {
+
+  this.displayfullcourses = [];
+
+  for(var c of this.matchingcourses) {
+
+    this.displayfullcourses.push(c)
+    
+  
+  } 
+
+  console.log(this.displayfullcourses)
+
+  
+  
+}
+
+
+
+
 ngOnInit() {
+
+  this._configservice.getPublicScheduleData().subscribe( (data)  => {
+    console.log(data);
+
+    
+    for(let key of Object.keys(data)){
+
+        if(key == "scheduleDataInfo"){
+          for(let i = 0; i< Object.keys(data[key]).length; i++){
+            this.scheduleDataInfo[Object.keys(data[key])[i]] = data["scheduleDataInfo"][Object.keys(data["scheduleDataInfo"])[i]]; 
+        
+          }
+        }
+
+      // add scheduleData from returned data to our schedule data 
+      
+        else if(key == "scheduleData"){
+          for(let i = 0; i< Object.keys(data[key]).length; i++){
+            this.scheduleData[Object.keys(data[key])[i]] = data["scheduleData"][Object.keys(data["scheduleData"])[i]]; 
+            // this.scheduleData[ SCHEDULE NAME ] = collectionItem["scheduleData"] VALUE
+          }
+        }
+
+        else{
+          console.log("something broked returned data has more than scheduleDataInfo and scheduleData properties");
+        }
+      }
+    // setting all courses expanded to false
+    for(let courseList of Object.keys(this.scheduleDataInfo)){
+      this.scheduleDataInfo[courseList].expanded = false;
+    }
+
+  })
+
+
+
+
+
+
+
+
+
+
+
+  //-------------------------------------------------------------------------------------------------
   this.displayfullcourses = [];
   this.matchingcourses = [];
 
@@ -278,24 +347,6 @@ else {
 
 }
 
-  //search for course stuff
-
-showFullCourseDetails() {
-
-  this.displayfullcourses = [];
-
-  for(var c of this.matchingcourses) {
-
-    this.displayfullcourses.push(c)
-    
-  
-  } 
-
-  console.log(this.displayfullcourses)
-
-  
-  
-}
 
 
 

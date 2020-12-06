@@ -83,6 +83,31 @@ export class ProfileComponent implements OnInit {
   
   }
   
+  deleteChosenSchedule() {
+
+    if(this.actvieScheduleName == null || this.actvieScheduleName == "" || this.actvieScheduleName == undefined){
+      alert("Please select a schedule to delete.")
+      return;
+    }
+    if(!this.profile){
+      alert("you must sign in to access this functionality");
+      return;
+    }
+
+ 
+      delete this.scheduleData[name];
+      delete this.scheduleDataInfo[name];
+      this.activeSchedule = undefined;
+      this.actvieScheduleName = undefined;
+    
+      console.log(this.scheduleData);
+      this.updateObject()
+      //todo write to database to delete
+    
+
+
+
+  }
   
   addToSchedule(){
     if(this.actvieScheduleName == null || this.actvieScheduleName == "" || this.actvieScheduleName == undefined){
@@ -94,10 +119,7 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
-    // if(!this.scheduleInfoObj[this.actvieScheduleName].creator != this.profile.name){
-    //   alert("you cannot edit a schedule that you did not create");
-    //   return;
-    // }
+
 
 
     let activeSchedule = this.activeSchedule;
@@ -118,115 +140,6 @@ export class ProfileComponent implements OnInit {
     this.updateObject()
   }
   
-
-
-  ngOnInit(): void {
-   
-    this.auth.user$.subscribe(
-      (profile) => { 
-        let profileJson = JSON.stringify(profile, null, 2);
-        this.profile = JSON.parse(profileJson);
-        console.log(this.profile);
-    });
-
-
-   
-
-    this.displayfullcourses = [];
-    this.matchingcourses = [];
-  
-    this._configservice.getcourses().subscribe(data => this.courses = data);
-  
-    
-  let subjectInput = (document.getElementById("Subject") as HTMLInputElement).value;
-  let courseID = (document.getElementById("numb") as HTMLInputElement).value;
-  let component = (document.getElementById("Component") as HTMLInputElement).value;
-  let keyWord = (document.getElementById("keyWord") as HTMLInputElement).value;
-  
-  console.log(subjectInput)
-  
-  //Search with keyword if subject input = all
-  if(subjectInput=="All")  {
-    if(keyWord.length<4) {
-      console.log("Please input a keyword with at least 4 characters") 
-    } 
-    else {
-      for(var string of this.courses)  {
-  //let lowercasecat = string.catalog_nbr.toLowerCase();
-  let lowercaseclass = string.className.toLowerCase();
-  //let catwithoutwhitespaces = lowercasecat.replace(/\s/g, '');
-  let classNamewithoutspaces = lowercaseclass.replace(/\s/g, '');
-  let lowercasekeyWord = keyWord.toLowerCase();
-  
-        if(classNamewithoutspaces.includes(lowercasekeyWord)) {
-          this.matchingcourses.push(string)
-    
-        }
-    
-      }
-    }
-   
-    if(this.matchingcourses.length==0) {
-  console.log("Please input a specific subject or a valid keywoord")  
-    }
-  
-  
-  }
-  
-  if(!courseID)  {
-    console.log("Please input a specific course id")
-  }
-  
-  
-  
-  for(var c of this.courses) {
-  
-    if(component=="ALL") {
-  
-    if (subjectInput === c.subject && courseID == c.catalog_nbr) {
-      this.matchingcourses.push(c)
-    }
-  
-  }
-  
-  else {
-    if (subjectInput === c.subject && courseID == c.catalog_nbr && component=== c.course_info[0].ssr_component) {
-      this.matchingcourses.push(c)
-    }
-  }
-    
-  }
-  
-  if (this.matchingcourses.length==0) {
-    alert("Please input a valid subject and course id combination")
-  }
-  else {
-    console.log(this.matchingcourses)
-  }
-  
-  }
-
-
-  //search for course stuff
-
-showFullCourseDetails() {
-
-  this.displayfullcourses = [];
-
-  for(var c of this.matchingcourses) {
-
-    this.displayfullcourses.push(c)
-    
-  
-  } 
-
-  console.log(this.displayfullcourses)
-
-  
-  
-}
-
-
 
 
 courseSelected(course: object){ 
@@ -376,11 +289,194 @@ updateObject() {
    if(visiblity=="public") {
   this._configservice.postPublicScheduleData(publicScheduleData).subscribe(); }
    else if(visiblity=="public") {
-  this._configservice.postPrivateScheduleData(privateScheduleData).subscribe();}
+  this._configservice.postPrivateScheduleData(privateScheduleData).subscribe();  }
 
 
 
 }
+
+ngOnInit(): void {
+  let user = this.profile.name;
+   
+  console.log("on init called");
+
+  this.auth.user$.subscribe(
+    (profile) => { 
+      let profileJson = JSON.stringify(profile, null, 2);
+      this.profile = JSON.parse(profileJson);
+      console.log(this.profile);
+  });
+
+  
+
+  this._configservice.getPublicScheduleData().subscribe( (data)  => {
+    console.log(data);
+
+    
+    for(let key of Object.keys(data)){
+
+
+        if(key == "scheduleDataInfo"){
+          for(let i = 0; i< Object.keys(data[key]).length; i++){
+            this.scheduleDataInfo[Object.keys(data[key])[i]] = data["scheduleDataInfo"][Object.keys(data["scheduleDataInfo"])[i]]; 
+        
+          }
+        }
+
+      // add scheduleData from returned data to our schedule data 
+      
+        else if(key == "scheduleData"){
+          for(let i = 0; i< Object.keys(data[key]).length; i++){
+            this.scheduleData[Object.keys(data[key])[i]] = data["scheduleData"][Object.keys(data["scheduleData"])[i]]; 
+            // this.scheduleData[ SCHEDULE NAME ] = collectionItem["scheduleData"] VALUE
+          }
+        }
+
+        else{
+          console.log("something broked returned data has more than scheduleDataInfo and scheduleData properties");
+        }
+      }
+    // setting all courses expanded to false
+    for(let courseList of Object.keys(this.scheduleDataInfo)){
+      this.scheduleDataInfo[courseList].expanded = false;
+    }
+
+  })
+
+    this._configservice.getPrivateScheduleData(user).subscribe( (data)  => {
+      console.log(data);
+    
+          
+          for(let key of Object.keys(data)){
+    
+            
+              if(key == "scheduleDataInfo"){
+                for(let i = 0; i< Object.keys(data[key]).length; i++){
+                  this.scheduleDataInfo[Object.keys(data[key])[i]] = data["scheduleDataInfo"][Object.keys(data["scheduleDataInfo"])[i]]; 
+                  // this.scheduleDataInfo[ SCHEDULE NAME ] = collectionItem["scheduleDataInfo"] VALUE
+                }
+              }
+    
+            
+            
+              else if(key == "scheduleData"){
+                for(let i = 0; i< Object.keys(data[key]).length; i++){
+                  this.scheduleData[Object.keys(data[key])[i]] = data["scheduleData"][Object.keys(data["scheduleData"])[i]]; 
+              
+                }
+              }
+    
+              else{
+                console.log("something broked returned data has more than scheduleDataInfo and scheduleData properties");
+              }
+          }
+         
+          for(let courseList of Object.keys(this.scheduleDataInfo)){
+            this.scheduleDataInfo[courseList].expanded = false;
+          }
+      
+    })
+
+      
+
+
+  //-----------------------------------------------------------------------------------
+ 
+
+  this.displayfullcourses = [];
+  this.matchingcourses = [];
+
+  this._configservice.getcourses().subscribe(data => this.courses = data);
+
+  
+let subjectInput = (document.getElementById("Subject") as HTMLInputElement).value;
+let courseID = (document.getElementById("numb") as HTMLInputElement).value;
+let component = (document.getElementById("Component") as HTMLInputElement).value;
+let keyWord = (document.getElementById("keyWord") as HTMLInputElement).value;
+
+console.log(subjectInput)
+
+//Search with keyword if subject input = all
+if(subjectInput=="All")  {
+  if(keyWord.length<4) {
+    console.log("Please input a keyword with at least 4 characters") 
+  } 
+  else {
+    for(var string of this.courses)  {
+//let lowercasecat = string.catalog_nbr.toLowerCase();
+let lowercaseclass = string.className.toLowerCase();
+//let catwithoutwhitespaces = lowercasecat.replace(/\s/g, '');
+let classNamewithoutspaces = lowercaseclass.replace(/\s/g, '');
+let lowercasekeyWord = keyWord.toLowerCase();
+
+      if(classNamewithoutspaces.includes(lowercasekeyWord)) {
+        this.matchingcourses.push(string)
+  
+      }
+  
+    }
+  }
+ 
+  if(this.matchingcourses.length==0) {
+console.log("Please input a specific subject or a valid keywoord")  
+  }
+
+
+}
+
+if(!courseID)  {
+  console.log("Please input a specific course id")
+}
+
+
+
+for(var c of this.courses) {
+
+  if(component=="ALL") {
+
+  if (subjectInput === c.subject && courseID == c.catalog_nbr) {
+    this.matchingcourses.push(c)
+  }
+
+}
+
+else {
+  if (subjectInput === c.subject && courseID == c.catalog_nbr && component=== c.course_info[0].ssr_component) {
+    this.matchingcourses.push(c)
+  }
+}
+  
+}
+
+if (this.matchingcourses.length==0) {
+  alert("Please input a valid subject and course id combination")
+}
+else {
+  console.log(this.matchingcourses)
+}
+
+}
+
+
+//search for course stuff
+
+showFullCourseDetails() {
+
+this.displayfullcourses = [];
+
+for(var c of this.matchingcourses) {
+
+  this.displayfullcourses.push(c)
+  
+
+} 
+
+console.log(this.displayfullcourses)
+
+
+
+}
+
 
 
 
