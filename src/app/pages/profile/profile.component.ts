@@ -45,6 +45,7 @@ export class ProfileComponent implements OnInit {
   }
 
   createSchedule(){
+    console.log(this.profile.name)
     let user = this.profile.name;
     let description: string = (document.getElementById("scheduleDescription") as HTMLInputElement).value;
     let visiblity: string = (document.getElementById("visibilityDropDown") as HTMLInputElement).value;
@@ -83,31 +84,31 @@ export class ProfileComponent implements OnInit {
   
   }
   
-  deleteChosenSchedule() {
+  // deleteChosenSchedule() {
 
-    if(this.actvieScheduleName == null || this.actvieScheduleName == "" || this.actvieScheduleName == undefined){
-      alert("Please select a schedule to delete.")
-      return;
-    }
-    if(!this.profile){
-      alert("you must sign in to access this functionality");
-      return;
-    }
+  //   if(this.actvieScheduleName == null || this.actvieScheduleName == "" || this.actvieScheduleName == undefined){
+  //     alert("Please select a schedule to delete.")
+  //     return;
+  //   }
+  //   if(!this.profile){
+  //     alert("you must sign in to access this functionality");
+  //     return;
+  //   }
 
  
-      delete this.scheduleData[name];
-      delete this.scheduleDataInfo[name];
-      this.activeSchedule = undefined;
-      this.actvieScheduleName = undefined;
+  //     delete this.scheduleData[name];
+  //     delete this.scheduleDataInfo[name];
+  //     this.activeSchedule = undefined;
+  //     this.actvieScheduleName = undefined;
     
-      console.log(this.scheduleData);
-      this.updateObject()
-      //todo write to database to delete
+  //     console.log(this.scheduleData);
+  //     this.updateObject();
+  //     //todo write to database to delete
     
 
 
 
-  }
+  // }
   
   addToSchedule(){
     if(this.actvieScheduleName == null || this.actvieScheduleName == "" || this.actvieScheduleName == undefined){
@@ -244,6 +245,8 @@ fixKeyvalueOrder(first, second){
 }
 
 
+
+
 updateObject() {
 
   let user = this.profile.name;
@@ -288,15 +291,53 @@ updateObject() {
 
    if(visiblity=="public") {
   this._configservice.postPublicScheduleData(publicScheduleData).subscribe(); }
-   else if(visiblity=="public") {
+   else if(visiblity=="private") {
   this._configservice.postPrivateScheduleData(privateScheduleData).subscribe();  }
 
 
 
 }
 
+
+
+getprivateschedule() {
+  console.log(this.profile.name)
+  this._configservice.getPrivateScheduleData(this.profile.name).subscribe( (data)  => {
+    console.log(data);
+  
+        
+        for(let key of Object.keys(data)){
+  
+          
+            if(key == "scheduleDataInfo"){
+              for(let i = 0; i< Object.keys(data[key]).length; i++){
+                this.scheduleDataInfo[Object.keys(data[key])[i]] = data["scheduleDataInfo"][Object.keys(data["scheduleDataInfo"])[i]]; 
+                // this.scheduleDataInfo[ SCHEDULE NAME ] = collectionItem["scheduleDataInfo"] VALUE
+              }
+            }
+  
+          
+          
+            else if(key == "scheduleData"){
+              for(let i = 0; i< Object.keys(data[key]).length; i++){
+                this.scheduleData[Object.keys(data[key])[i]] = data["scheduleData"][Object.keys(data["scheduleData"])[i]]; 
+            
+              }
+            }
+  
+            else{
+              console.log("something broked returned data has more than scheduleDataInfo and scheduleData properties");
+            }
+        }
+       
+        for(let courseList of Object.keys(this.scheduleDataInfo)){
+          this.scheduleDataInfo[courseList].expanded = false;
+        }
+    
+  })
+}
+
 ngOnInit(): void {
-  let user = this.profile.name;
    
   console.log("on init called");
 
@@ -305,16 +346,22 @@ ngOnInit(): void {
       let profileJson = JSON.stringify(profile, null, 2);
       this.profile = JSON.parse(profileJson);
       console.log(this.profile);
+      console.log(this.profile.name);
+      this.getprivateschedule()
   });
+  //loop through sched data??
+  //what happens here that turns profile null??
+
 
   
 
   this._configservice.getPublicScheduleData().subscribe( (data)  => {
     console.log(data);
+    //doesnt even get here
+    console.log("at 317")
 
     
     for(let key of Object.keys(data)){
-
 
         if(key == "scheduleDataInfo"){
           for(let i = 0; i< Object.keys(data[key]).length; i++){
@@ -324,14 +371,11 @@ ngOnInit(): void {
         }
 
       // add scheduleData from returned data to our schedule data 
-      
         else if(key == "scheduleData"){
           for(let i = 0; i< Object.keys(data[key]).length; i++){
             this.scheduleData[Object.keys(data[key])[i]] = data["scheduleData"][Object.keys(data["scheduleData"])[i]]; 
-            // this.scheduleData[ SCHEDULE NAME ] = collectionItem["scheduleData"] VALUE
           }
         }
-
         else{
           console.log("something broked returned data has more than scheduleDataInfo and scheduleData properties");
         }
@@ -340,42 +384,8 @@ ngOnInit(): void {
     for(let courseList of Object.keys(this.scheduleDataInfo)){
       this.scheduleDataInfo[courseList].expanded = false;
     }
-
   })
-
-    this._configservice.getPrivateScheduleData(user).subscribe( (data)  => {
-      console.log(data);
     
-          
-          for(let key of Object.keys(data)){
-    
-            
-              if(key == "scheduleDataInfo"){
-                for(let i = 0; i< Object.keys(data[key]).length; i++){
-                  this.scheduleDataInfo[Object.keys(data[key])[i]] = data["scheduleDataInfo"][Object.keys(data["scheduleDataInfo"])[i]]; 
-                  // this.scheduleDataInfo[ SCHEDULE NAME ] = collectionItem["scheduleDataInfo"] VALUE
-                }
-              }
-    
-            
-            
-              else if(key == "scheduleData"){
-                for(let i = 0; i< Object.keys(data[key]).length; i++){
-                  this.scheduleData[Object.keys(data[key])[i]] = data["scheduleData"][Object.keys(data["scheduleData"])[i]]; 
-              
-                }
-              }
-    
-              else{
-                console.log("something broked returned data has more than scheduleDataInfo and scheduleData properties");
-              }
-          }
-         
-          for(let courseList of Object.keys(this.scheduleDataInfo)){
-            this.scheduleDataInfo[courseList].expanded = false;
-          }
-      
-    })
 
       
 

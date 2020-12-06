@@ -65,7 +65,7 @@ const checkJwt = jwt({
 
 
 app.post("/api/user/update-data"/*, checkJwt*/, (req, res)=> {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:7000');
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
 
 
     let username = req.body.user; 
