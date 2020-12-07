@@ -34,15 +34,38 @@ export class ProfileComponent implements OnInit {
   scheduleInfoObj = {};
   activeSchedule = []; 
   actvieScheduleName: string;
-  timeBasedSchedule = {}
+  timeBasedSchedule = {};
   newScheduleEnabled = false;""
   profile = null;
   scheduleDataInfo = {};
   scheduleData: any = {};
+  displayInformationaboutcourse: any = [];
 
   constructor(public auth: AuthService, private _configservice:ConfigService, @Inject(DOCUMENT) private doc: Document) {
     
   }
+
+  showInformationaboutSchedule () {
+    let showcreator = this.scheduleDataInfo[this.actvieScheduleName].creator
+    let showmodified = this.scheduleDataInfo[this.actvieScheduleName].modified
+    let showlength = this.scheduleDataInfo[this.actvieScheduleName].length
+    let showdescription = this.scheduleDataInfo[this.actvieScheduleName].description
+    let showexpanded = this.scheduleDataInfo[this.actvieScheduleName].expanded
+    let showvisability = this.scheduleDataInfo[this.actvieScheduleName].visability
+   
+
+    this.displayInformationaboutcourse.push("The creator of the schedule is "+showcreator)
+    this.displayInformationaboutcourse.push("The last time this schedule wa modified was "+showmodified)
+    this.displayInformationaboutcourse.push("There are this many subjects in this schedule "+showlength)
+    this.displayInformationaboutcourse.push("The purpose of this schedule is to"+showdescription)
+    this.displayInformationaboutcourse.push("This subject is "+showvisability)
+
+    console.log(this.displayInformationaboutcourse)
+  
+
+  }
+    
+  
 
   createSchedule(){
     console.log(this.profile.name)
@@ -77,39 +100,84 @@ export class ProfileComponent implements OnInit {
   }
 
   chooseSchedule(){
+this.displayInformationaboutcourse= [];
 
     let name = this.activeSch;
     this.activeSchedule = this.scheduleData[name];
     this.actvieScheduleName = name;
   
   }
-  
-  // deleteChosenSchedule() {
 
-  //   if(this.actvieScheduleName == null || this.actvieScheduleName == "" || this.actvieScheduleName == undefined){
-  //     alert("Please select a schedule to delete.")
-  //     return;
-  //   }
-  //   if(!this.profile){
-  //     alert("you must sign in to access this functionality");
-  //     return;
-  //   }
+  deleteChosenSchedule(name:string){
+    delete this.scheduleData[name];
+    delete this.scheduleDataInfo[name];
+    this.activeSchedule = undefined;
+    this.actvieScheduleName = undefined;
 
- 
-  //     delete this.scheduleData[name];
-  //     delete this.scheduleDataInfo[name];
-  //     this.activeSchedule = undefined;
-  //     this.actvieScheduleName = undefined;
+    console.log(this.scheduleData);
+    this.updateObject() 
+  }
+
+  editCourseList() {
+
+    var newScheduleDataInfoObject = {};
+
+
+    let newScheduleName: string = (document.getElementById("newScheduleName") as HTMLInputElement).value;
+    let newScheduleDescription: string = (document.getElementById("newScheduleDescription") as HTMLInputElement).value;
+    let newVisibility = (document.getElementById("newvisibilityDropDown") as HTMLInputElement).value;
+
+    if(this.scheduleDataInfo[this.actvieScheduleName].creator != this.profile.name){
+      console.log("Cannot edit this course")
+      alert("you cannot edit a schedule that you did not create");
+      return;
+    }
+
+      //1. check for schedule name
+      if(newScheduleDescription != this.scheduleDataInfo[this.actvieScheduleName].description){
+        newScheduleDataInfoObject["description"] = newScheduleDescription;
+      }
+      else{
+        newScheduleDataInfoObject["description"] = this.scheduleDataInfo[this.actvieScheduleName].description; 
+      }
+       //2. check for schedule visibility
+        if(newVisibility != this.scheduleDataInfo[this.actvieScheduleName].visibility){
+          newScheduleDataInfoObject["visibility"] = newVisibility;
+        }
+        else{
+          newScheduleDataInfoObject["visibility"] = this.scheduleDataInfo[this.actvieScheduleName].visibility;
+        }
+
+        //3. set last modified date and creator
+        newScheduleDataInfoObject["modified"] = new Date();
+        newScheduleDataInfoObject["creator"] = this.profile.name;
+        
+        //4. and lastly, but not least set the new object to the one we've created and delete the old one
+        if (newScheduleName != this.actvieScheduleName) {
+
+          this.scheduleDataInfo[newScheduleName] = newScheduleDataInfoObject; 
+          delete this.scheduleDataInfo[this.actvieScheduleName];
+          
+
+          this.scheduleData[newScheduleName] = this.scheduleData[this.actvieScheduleName];
+          delete this.scheduleData[this.actvieScheduleName]; 
+
+          this.actvieScheduleName = newScheduleName;
+          this.activeSchedule = this.scheduleData[newScheduleName];
+
     
-  //     console.log(this.scheduleData);
-  //     this.updateObject();
-  //     //todo write to database to delete
-    
+        } else {
+         
+          this.scheduleDataInfo[this.actvieScheduleName] = newScheduleDataInfoObject
 
 
+        }
 
-  // }
-  
+      this.updateObject();
+      console.log("schedule updated");
+
+  }
+
   addToSchedule(){
     if(this.actvieScheduleName == null || this.actvieScheduleName == "" || this.actvieScheduleName == undefined){
       alert("Please select a schedule to add courses to it.")
@@ -233,7 +301,7 @@ for(var timeSlot of Object.keys(formattedTimeTableData)){
     }
 };
 
-  this.timeBasedSchedule = formattedTimeTableData;  // to fix error set line 51 to:   timeBasedSchedule = {}; 
+  this.timeBasedSchedule = formattedTimeTableData;  
   this.enableTimeTableVisibility = true;
   console.log(this.timeBasedSchedule);
   return;
@@ -387,10 +455,7 @@ ngOnInit(): void {
   })
     
 
-      
-
-
-  //-----------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------------
  
 
   this.displayfullcourses = [];
@@ -468,7 +533,7 @@ else {
 }
 
 
-//search for course stuff
+
 
 showFullCourseDetails() {
 

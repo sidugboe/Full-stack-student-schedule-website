@@ -4,7 +4,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ProfileComponent } from './pages/profile/profile.component';
-import { ExternalApiComponent } from './pages/external-api/external-api.component';
 import { AuthModule, AuthHttpInterceptor} from '@auth0/auth0-angular';
 import { environment as env } from '../environments/environment';
 import { NgModule } from '@angular/core';
@@ -14,6 +13,8 @@ import { AnauthenticatedComponent } from './anauthenticated/anauthenticated.comp
 import { AcceptableComponent } from './acceptable/acceptable.component';
 import { TakedownComponent } from './takedown/takedown.component';
 import { PrivacyComponent } from './privacy/privacy.component';
+import { TakedownworkflowComponent } from './takedownworkflow/takedownworkflow.component';
+import { CommentsComponent } from './comments/comments.component';
 
 
 
@@ -23,11 +24,12 @@ import { PrivacyComponent } from './privacy/privacy.component';
   declarations: [
     AppComponent,
     ProfileComponent,
-    ExternalApiComponent,
     AnauthenticatedComponent,
     AcceptableComponent,
     TakedownComponent,
     PrivacyComponent,
+    TakedownworkflowComponent,
+    CommentsComponent,
   ],
   providers: [
     ConfigService,

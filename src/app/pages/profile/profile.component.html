@@ -1,8 +1,5 @@
 <!--This is where im going to put my user schedule shit-->
-
 <div *ngIf= "auth.user$ | async as user">
-  <p>Here is your profile</p>
-
   <div class="col-md-2 mb-3">
     <img
       [src]="user.picture"
@@ -50,9 +47,39 @@
 </select>
 
 <br/>
+<br/>
+
 <button type="submit"  autofocus="" (click)="addToSchedule()" >Add selected courses to selected schedule</button>
 <br/>
-<button type="submit"  autofocus="" (click)="deleteChosenSchedule()" >Delete this schedule</button>
+<br/>
+
+<button type="submit"  autofocus="" (click)="deleteChosenSchedule(actvieScheduleName)">Delete this schedule</button>
+<br/>
+<br/>
+
+
+  <button type="submit"  autofocus="" (click)="showInformationaboutSchedule()">Show information about this schedule</button>
+<div *ngFor="let info of displayInformationaboutcourse">
+{{info}}
+</div>
+
+<br/>
+<br/>
+
+
+<button type="submit"  autofocus="" (click)="editCourseList()" >Edit this schedule</button>
+<br/>
+<input id ="newScheduleName" type="text" [(ngModel)]='newSchedule' placeholder="New schedule Name"> 
+<br/>
+<input id ="newScheduleDescription" type="text" [(ngModel)]='newScheduleDesc' placeholder="New schedule Description"> 
+<div class = "Component">     
+  <p1 class ="bold">New scheduleVisibility:</p1> 
+<select name="Component" id="newvisibilityDropDown">
+<option value = "public">Public</option>
+<option value = "private">Private</option>
+</select>
+</div>
+
 
 <!--Select and add to schedule -->
 

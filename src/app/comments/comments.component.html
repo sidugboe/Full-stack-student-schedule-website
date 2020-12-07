@@ -1,0 +1,22 @@
+<h1>Comment Section</h1>
+<br/>
+<div class = "CourseNumber">   
+    <p class ="bold">Please input the class you want to comment on:</p>  
+    <input id ="subject" type="text" placeholder="Input description">
+    </div>
+<br/>
+<div class = "CourseNumber">   
+    <p class ="bold">Please input your comment:</p>  
+    <input id ="comment" type="text" placeholder="Input description">
+    </div>
+ <br/>
+<button class = "submit" id ="submitname"  (click)= "createComment()">Submit comment</button>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+    <div *ngFor = "let comment of commentsarray">
+{{comment}}
+        </div>
