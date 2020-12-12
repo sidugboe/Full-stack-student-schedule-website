@@ -12,10 +12,10 @@ import { scheduleResponse } from '../scheduleresponses';
 @Injectable()
 export class ConfigService {
 
-  private linkstring: string = "http://localhost:7000/api/subjectss";
-  private privateScheduleURL: string = "http://localhost:7000/api/user/update-data";
-  private publicScheduleURL: string = "http://localhost:7000/api/public/update-data";
-  private geturl: string = "http://localhost:7000/api/public/scheduleData";
+  private linkstring: string = "/api/subjectss";
+  private privateScheduleURL: string = "/api/user/update-data";
+  private publicScheduleURL: string = "/api/public/update-data";
+  private geturl: string = "/api/public/scheduleData";
 
 
   constructor(private http: HttpClient) { }
@@ -38,7 +38,7 @@ export class ConfigService {
   };
 
   getPrivateScheduleData(username): Observable<scheduleResponse[]> {  // observable type any?
-    let GETPrivateScheduleDataString: string = "http://localhost:7000/api/" + username + "/scheduleData";
+    let GETPrivateScheduleDataString: string = "/api/" + username + "/scheduleData";
     return this.http.get<any[]>(GETPrivateScheduleDataString);
   };
    
