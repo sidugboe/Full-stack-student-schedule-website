@@ -2,5 +2,5 @@
   "domain": "dev-b3--aq40.us.auth0.com",
   "clientId": "kZQmBccE2VcSa9ydXplm6W2PILlEaYGJ",
   "audience": "https://lab5-stephen",
-  "apiUrl": "http://localhost:7000"
+  "apiUrl": "http://ec2-54-174-246-76.compute-1.amazonaws.com:7000"
 }
